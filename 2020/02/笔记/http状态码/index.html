@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
+  
+  <title>http状态码 | li9hu&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="2开头: 成功状态码 3开头: 重定向状态码 4开头: 客户端错误状态码 5开头: 服务端错误状态码 1XX: 信息状态码    状态码 含义 描述     100 继续 初始的请求已经接受，请客户端继续发送剩余部分   101 切换协议 请求这要求服务器切换协议，服务器已确定切换    2XX: 成功状态码    状态码 含义 描述     200 成功 服务器已成功处理了请求   201 已创">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http状态码">
+<meta property="og:url" content="http://yoursite.com/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/index.html">
+<meta property="og:site_name" content="li9hu&#39;s Blog">
+<meta property="og:description" content="2开头: 成功状态码 3开头: 重定向状态码 4开头: 客户端错误状态码 5开头: 服务端错误状态码 1XX: 信息状态码    状态码 含义 描述     100 继续 初始的请求已经接受，请客户端继续发送剩余部分   101 切换协议 请求这要求服务器切换协议，服务器已确定切换    2XX: 成功状态码    状态码 含义 描述     200 成功 服务器已成功处理了请求   201 已创">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-02-29T05:31:02.000Z">
+<meta property="article:modified_time" content="2020-03-25T00:32:58.000Z">
+<meta property="article:author" content="li9hu">
+<meta property="article:tag" content="http">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+	<link href="/js/prism/prism.css" rel="stylesheet" />
+	<script src="/js/prism/prism.js" ></script>
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.png" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">li9hu</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90">漏洞分析</a></li>
+                        
+                            <li><a  href="/categories/%E7%AC%94%E8%AE%B0">笔记</a></li>
+                        
+                            <li><a  href="/%E8%AE%A1%E5%88%92">计划</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/ewan9hu" title="github">github</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/discuz/" style="font-size: 13.33px;">discuz</a> <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/duomi/" style="font-size: 10px;">duomi</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/linux/" style="font-size: 10px;">linux</a> <a href="/tags/php/" style="font-size: 16.67px;">php</a> <a href="/tags/phpmyadmin/" style="font-size: 10px;">phpmyadmin</a> <a href="/tags/python/" style="font-size: 20px;">python</a> <a href="/tags/socket/" style="font-size: 10px;">socket</a> <a href="/tags/sql/" style="font-size: 13.33px;">sql</a> <a href="/tags/tp5/" style="font-size: 10px;">tp5</a> <a href="/tags/%E4%BB%A3%E7%90%86%E6%B1%A0/" style="font-size: 10px;">代理池</a> <a href="/tags/%E9%80%9A%E8%BE%BEOA/" style="font-size: 10px;">通达OA</a> <a href="/tags/%E9%9D%A2%E7%BB%8F/" style="font-size: 10px;">面经</a>
+                    </div>
+                </section>
+                
+                
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">li9hu</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.png" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">li9hu</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90">漏洞分析</a></li>
+                
+                    <li><a href="/categories/%E7%AC%94%E8%AE%B0">笔记</a></li>
+                
+                    <li><a href="/%E8%AE%A1%E5%88%92">计划</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/ewan9hu" title="github">github</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-笔记/http状态码" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/" class="article-date">
+      <time datetime="2020-02-29T05:31:02.000Z" itemprop="datePublished">2020-02-29</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      http状态码
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/http/" rel="tag">http</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>2开头: 成功状态码</p>
+<p>3开头: 重定向状态码</p>
+<p>4开头: 客户端错误状态码</p>
+<p>5开头: 服务端错误状态码</p>
+<h3 id="1XX-信息状态码">1XX: 信息状态码</h3>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>含义</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>100</td>
+<td>继续</td>
+<td>初始的请求已经接受，请客户端继续发送剩余部分</td>
+</tr>
+<tr>
+<td>101</td>
+<td>切换协议</td>
+<td>请求这要求服务器切换协议，服务器已确定切换</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2XX-成功状态码">2XX: 成功状态码</h3>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>含义</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>成功</td>
+<td>服务器已成功处理了请求</td>
+</tr>
+<tr>
+<td>201</td>
+<td>已创建</td>
+<td>请求成功并且服务器创建了新的资源</td>
+</tr>
+<tr>
+<td>202</td>
+<td>已接受</td>
+<td>服务器已接受请求，但尚未处理</td>
+</tr>
+<tr>
+<td>203</td>
+<td>非授权信息</td>
+<td>服务器已成功处理请求，但返回的信息可能来自另一个来源</td>
+</tr>
+<tr>
+<td>204</td>
+<td>无内容</td>
+<td>服务器成功处理了请求，但没有返回任何内容</td>
+</tr>
+<tr>
+<td>205</td>
+<td>重置内容</td>
+<td>服务器处理成功，用户终端应重置文档视图</td>
+</tr>
+<tr>
+<td>206</td>
+<td>部分内容</td>
+<td>服务器成功处理了部分GET请求</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3XX-重定向状态码">3XX: 重定向状态码</h3>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>含义</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>300</td>
+<td>多种选择</td>
+<td>针对请求，服务器可执行多种操作</td>
+</tr>
+<tr>
+<td>301</td>
+<td>永久移动</td>
+<td>请求的页面已永久跳转到新的url</td>
+</tr>
+<tr>
+<td>302</td>
+<td>临时移动</td>
+<td>服务器目前从不同位置的网页响应请求，但请求仍继续使用原有位置来进行以后的请求</td>
+</tr>
+<tr>
+<td>303</td>
+<td>查看其他位置</td>
+<td>请求者应当对不同的位置使用单独的GET请求来检索响应时，服务器返回此代码</td>
+</tr>
+<tr>
+<td>304</td>
+<td>未修改</td>
+<td>自从上次请求后，请求的网页未修改过</td>
+</tr>
+<tr>
+<td>305</td>
+<td>使用代理</td>
+<td>请求者只能使用代理访问请求的网页</td>
+</tr>
+<tr>
+<td>307</td>
+<td>临时重定向</td>
+<td>服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求</td>
+</tr>
+</tbody>
+</table>
+<h3 id="4XX-客户端错误状态码">4XX: 客户端错误状态码</h3>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>含义</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>400</td>
+<td>错误请求</td>
+<td>服务器不理解请求的语法</td>
+</tr>
+<tr>
+<td>401</td>
+<td>未授权</td>
+<td>请求要求用户的身份演验证</td>
+</tr>
+<tr>
+<td>403</td>
+<td>禁止</td>
+<td>服务器拒绝请求</td>
+</tr>
+<tr>
+<td>404</td>
+<td>未找到</td>
+<td>服务器找不到请求的页面</td>
+</tr>
+<tr>
+<td>405</td>
+<td>方法禁用</td>
+<td>禁用请求中指定的方法</td>
+</tr>
+<tr>
+<td>406</td>
+<td>不接受</td>
+<td>无法使用请求的内容特性响应请求的页面</td>
+</tr>
+<tr>
+<td>407</td>
+<td>需要代理授权</td>
+<td>请求需要代理的身份认证</td>
+</tr>
+<tr>
+<td>408</td>
+<td>请求超时</td>
+<td>服务器等候请求时发生超时</td>
+</tr>
+<tr>
+<td>409</td>
+<td>冲突</td>
+<td>服务器在完成请求时发生冲突</td>
+</tr>
+<tr>
+<td>410</td>
+<td>已删除</td>
+<td>客户端请求的资源已经不存在</td>
+</tr>
+<tr>
+<td>411</td>
+<td>需要有效长度</td>
+<td>服务器不接受不含有效长度表头字段的请求</td>
+</tr>
+<tr>
+<td>412</td>
+<td>未满足前提条件</td>
+<td>服务器未满足请求者在请求中设置的其中一个前提条件</td>
+</tr>
+<tr>
+<td>413</td>
+<td>请求实体过大</td>
+<td>由于请求实体过大，服务器无法处理，因此拒绝请求</td>
+</tr>
+<tr>
+<td>414</td>
+<td>请求url过长</td>
+<td>请求的url过长，服务器无法处理</td>
+</tr>
+<tr>
+<td>415</td>
+<td>不支持格式</td>
+<td>服务器无法处理请求中附带媒体格式</td>
+</tr>
+<tr>
+<td>416</td>
+<td>范围无效</td>
+<td>客户端请求的范围无效</td>
+</tr>
+<tr>
+<td>417</td>
+<td>未满足期望</td>
+<td>服务器无法满足请求表头字段要求</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5XX-服务端错误状态码">5XX: 服务端错误状态码</h3>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>含义</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>500</td>
+<td>服务器错误</td>
+<td>服务器内部错误，无法完成请求</td>
+</tr>
+<tr>
+<td>501</td>
+<td>尚未实施</td>
+<td>服务器不具备完成请求的功能</td>
+</tr>
+<tr>
+<td>502</td>
+<td>错误网关</td>
+<td>服务器作为网关或代理出现错误</td>
+</tr>
+<tr>
+<td>503</td>
+<td>服务不可用</td>
+<td>服务器目前无法使用</td>
+</tr>
+<tr>
+<td>504</td>
+<td>网关超时</td>
+<td>网关或代理服务器，未及时获取请求</td>
+</tr>
+<tr>
+<td>505</td>
+<td>不支持版本</td>
+<td>服务器不支持请求中使用的HTTP协议版本</td>
+</tr>
+</tbody>
+</table>
+<p>转自: <a href="https://www.cnblogs.com/binguo666/p/10940198.html" target="_blank" rel="noopener">斌果</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/">http状态码</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 li9hu 的个人博客">li9hu</a></p>
+        <p><span>发布时间:</span>2020年02月29日 - 13时31分</p>
+        <p><span>最后更新:</span>2020年03月25日 - 08时32分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/" title="http状态码">http://yoursite.com/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/　　作者: li9hu" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%B8%A6%E9%A2%9C%E8%89%B2%E8%BE%93%E5%87%BA/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          python带颜色输出
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">SQL注入</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1XX-信息状态码"><span class="toc-number">1.</span> <span class="toc-text">1XX: 信息状态码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2XX-成功状态码"><span class="toc-number">2.</span> <span class="toc-text">2XX: 成功状态码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3XX-重定向状态码"><span class="toc-number">3.</span> <span class="toc-text">3XX: 重定向状态码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4XX-客户端错误状态码"><span class="toc-number">4.</span> <span class="toc-text">4XX: 客户端错误状态码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5XX-服务端错误状态码"><span class="toc-number">5.</span> <span class="toc-text">5XX: 服务端错误状态码</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%B8%A6%E9%A2%9C%E8%89%B2%E8%BE%93%E5%87%BA/" title="上一篇: python带颜色输出">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/" title="下一篇: SQL注入">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/2020%E5%AE%89%E5%85%A8%E5%B2%97%E6%98%A5%E6%8B%9B%E6%80%BB%E7%BB%93/">2020长亭实习</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/">通达OA任意文件上传/文件包含GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">python反序列化</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/PhpMyAdmin%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/">PhpMyAdmin用户界面存在SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/socket%E7%BC%96%E6%88%90/">socket编成</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%B8%A6%E9%A2%9C%E8%89%B2%E8%BE%93%E5%87%BA/">python带颜色输出</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/">http状态码</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/sql%E6%93%8D%E4%BD%9C/">sql操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">入侵检测</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">Thinkphp5x远程代码执行</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/Docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">Docker使用记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/%E7%88%AC%E8%99%AB%E8%AE%B0%E5%BD%95%EF%BC%8C%E7%BC%96%E5%86%99%E4%BB%A3%E7%90%86%E6%B1%A0/">爬虫记录，编写代理池</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/duomi3-0%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96-GetShell/">duomi3.0变量覆盖/GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/">discuzx3.4任意文件删除</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/">discuz 6.*/7.*全局变量防御绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/">关于Phar的总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/%E6%B8%97%E9%80%8F/disable-function%E7%BB%95%E8%BF%87/">disable_function绕过</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 li9hu
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 1;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'xxxxx', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?xxxxxx";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>
