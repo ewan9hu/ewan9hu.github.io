@@ -9,15 +9,15 @@
   
   <title>java类加载器 | li9hu&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x01 虚拟机内置加载器 根加载器(Bootstrap) 最底层的类加载器, 且没有父类加载器，也没有继承java.lang.ClassLoader。负责加载核心类库&lt;java_home&gt;\jre\lib, 只能加载以java javac sun开头的类。&lt;类名&gt;.class.getclassloader()返回结果为null，根类加载器比较特殊，如果使用的是根类加载器那">
+  <meta name="description" content="0x01 虚拟机内置加载器 根加载器(Bootstrap) 最底层的类加载器, 且没有父类加载器, 也没有继承java.lang.ClassLoader。负责加载核心类库&lt;java_home&gt;\jre\lib, 只能加载以java javac sun开头的类。&lt;类名&gt;.class.getclassloader()返回结果为null, 根类加载器比较特殊, 如果使用的是根类加">
 <meta property="og:type" content="article">
 <meta property="og:title" content="java类加载器">
 <meta property="og:url" content="http://yoursite.com/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/index.html">
 <meta property="og:site_name" content="li9hu&#39;s Blog">
-<meta property="og:description" content="0x01 虚拟机内置加载器 根加载器(Bootstrap) 最底层的类加载器, 且没有父类加载器，也没有继承java.lang.ClassLoader。负责加载核心类库&lt;java_home&gt;\jre\lib, 只能加载以java javac sun开头的类。&lt;类名&gt;.class.getclassloader()返回结果为null，根类加载器比较特殊，如果使用的是根类加载器那">
+<meta property="og:description" content="0x01 虚拟机内置加载器 根加载器(Bootstrap) 最底层的类加载器, 且没有父类加载器, 也没有继承java.lang.ClassLoader。负责加载核心类库&lt;java_home&gt;\jre\lib, 只能加载以java javac sun开头的类。&lt;类名&gt;.class.getclassloader()返回结果为null, 根类加载器比较特殊, 如果使用的是根类加">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-04-15T13:52:42.000Z">
-<meta property="article:modified_time" content="2020-04-18T03:29:33.222Z">
+<meta property="article:modified_time" content="2020-04-26T06:58:39.454Z">
 <meta property="article:author" content="li9hu">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
@@ -281,42 +281,42 @@
           
         <h3 id="0x01-虚拟机内置加载器">0x01 虚拟机内置加载器</h3>
 <p><strong>根加载器(Bootstrap)</strong></p>
-<p>最底层的类加载器, 且没有父类加载器，也没有继承<code>java.lang.ClassLoader</code>。负责加载核心类库<code>&lt;java_home&gt;\jre\lib</code>, 只能加载以<code>java javac sun</code>开头的类。<code>&lt;类名&gt;.class.getclassloader()</code>返回结果为<code>null</code>，根类加载器比较特殊，如果使用的是根类加载器那么获取的ClassLoader值都是<code>null</code>。</p>
+<p>最底层的类加载器, 且没有父类加载器, 也没有继承<code>java.lang.ClassLoader</code>。负责加载核心类库<code>&lt;java_home&gt;\jre\lib</code>, 只能加载以<code>java javac sun</code>开头的类。<code>&lt;类名&gt;.class.getclassloader()</code>返回结果为<code>null</code>, 根类加载器比较特殊, 如果使用的是根类加载器那么获取的ClassLoader值都是<code>null</code>。</p>
 <hr>
 <p><strong>扩展加载器(Extension)</strong></p>
-<p>父类加载器是根加载器，负责加载<code>&lt;java_home&gt;\jre\lib\ext</code> 的类库。<code>ExtClassLoader</code></p>
+<p>父类加载器是根加载器, 负责加载<code>&lt;java_home&gt;\jre\lib\ext</code> 的类库。<code>ExtClassLoader</code></p>
 <hr>
 <p><strong>系统类加载器(System)</strong></p>
-<p>也称为应用加载器，它的父类是扩展加载器。负责从<code>classpath</code>环境变量，或者<code>java.class.path</code>所指定的目录中加载类。它是用户自定义类加载器的默认父加载器。一般情况下是该加载器是程序中默认的类加载器。<code>AppClassLoader</code></p>
+<p>也称为应用加载器, 它的父类是扩展加载器。负责从<code>classpath</code>环境变量, 或者<code>java.class.path</code>所指定的目录中加载类。它是用户自定义类加载器的默认父加载器。一般情况下是该加载器是程序中默认的类加载器。<code>AppClassLoader</code></p>
 <hr>
 <p><strong>小结</strong></p>
-<p>java程序类加载是由上述3类加载器相互配合执行的，同时我们还可以自定义类加载器。当需要使用某类时，java虚拟机才会将它的class字节码加载到内存生成class对象。加载是按照双亲委派方式加载的。</p>
+<p>java程序类加载是由上述3类加载器相互配合执行的, 同时我们还可以自定义类加载器。当需要使用某类时, java虚拟机才会将它的class字节码加载到内存生成class对象。加载是按照双亲委派方式加载的。</p>
 <hr>
 <h3 id="0x02-类加载器的双亲委派机制">0x02 类加载器的双亲委派机制</h3>
-<p>当classloader加载一个类时，先委托自己父类的加载器去加载这个类。一直尝试到根类加载器，加载不到时再层层返回自己加载。可以理解每次都是从<code>bootstrap</code>加载器开始尝试一直到<code>applicaion</code> 再到用户自定义。注意，这里是委派，并没有继承父类加载器。</p>
+<p>当classloader加载一个类时, 先委托自己父类的加载器去加载这个类。一直尝试到根类加载器, 加载不到时再层层返回自己加载。可以理解每次都是从<code>bootstrap</code>加载器开始尝试一直到<code>applicaion</code> 再到用户自定义。注意, 这里是委派, 并没有继承父类加载器。</p>
 <p><strong>使用双亲委派机制的好处</strong></p>
 <ol>
-<li>避免重复加载，当父类加载器加载了该类时，子类可不用再加载，保证内存中类字节码文件只有1份。</li>
-<li>防止恶意用户定义与核心类重名的类，当<code>bootstrap</code>加载器发现核心类中已存在该类，就会直接加载, 而不会加载恶意用户定义的重名类, 防止核心API库被篡改。</li>
+<li>避免重复加载, 当父类加载器加载了该类时, 子类可不用再加载, 保证内存中类字节码文件只有1份。</li>
+<li>防止恶意用户定义与核心类重名的类, 当<code>bootstrap</code>加载器发现核心类中已存在该类, 就会直接加载, 而不会加载恶意用户定义的重名类, 防止核心API库被篡改。</li>
 </ol>
 <h3 id="0x03-ClassLoader">0x03 ClassLoader</h3>
 <p>所有类加载器(除了根类加载器) 都必须继承<code>java.lang.ClassLoader</code>。它是一个抽象类。</p>
 <hr>
 <p><strong>loadClass</strong></p>
-<p>在<code>ClassLoader</code>源码中，有一个方法叫<code>loadClass</code>是双亲委托模式的代码实现。<br>
-只有父类加载器加载不到类时，会调用<code>findClass</code>方法进行类的查找。所以在自定义类加载器时<strong>切记不要覆盖loadclass方法</strong>,应该覆盖的是<code>findClass</code>方法。</p>
+<p>在<code>ClassLoader</code>源码中, 有一个方法叫<code>loadClass</code>是双亲委托模式的代码实现。<br>
+只有父类加载器加载不到类时, 会调用<code>findClass</code>方法进行类的查找。所以在自定义类加载器时<strong>切记不要覆盖loadclass方法</strong>,应该覆盖的是<code>findClass</code>方法。</p>
 <p>加载类默认实现将以下顺序搜索类:</p>
 <ol>
 <li>调用<code>findLoadClass(String)</code>  检查是否已经加载类。</li>
-<li>如果没有加载，则在父类加载器上调用<code>loadClass</code>方法。如果父类加载器为<code>null</code>, 则使用虚拟机的内置类加载器。</li>
-<li>如果都上述都没有成功，则调用<code>findClass(String)方法查找类</code>。</li>
+<li>如果没有加载, 则在父类加载器上调用<code>loadClass</code>方法。如果父类加载器为<code>null</code>, 则使用虚拟机的内置类加载器。</li>
+<li>如果都上述都没有成功, 则调用<code>findClass(String)方法查找类</code>。</li>
 </ol>
 <hr>
 <p><strong>findClass</strong></p>
-<p>在自定义类加载器时，一般我们需要覆盖这个方法。且<code>ClassLoader</code>中给出了一个默认的错误实现，我们直接抛出去即可。</p>
+<p>在自定义类加载器时, 一般我们需要覆盖这个方法。且<code>ClassLoader</code>中给出了一个默认的错误实现, 我们直接抛出去即可。</p>
 <hr>
 <p><strong>defineClass</strong></p>
-<p>将byte字节码解析成虚拟机额能够识别的Class对象。在自定义类加载器时，会直接覆盖ClassLoader的<code>indClass()</code>方法。获取到要加载类的字节码后，调用<code>defineClass</code>方法生成Class对象。</p>
+<p>将byte字节码解析成虚拟机额能够识别的Class对象。在自定义类加载器时, 会直接覆盖ClassLoader的<code>indClass()</code>方法。获取到要加载类的字节码后, 调用<code>defineClass</code>方法生成Class对象。</p>
 <hr>
 <p><strong>resoveClass</strong></p>
 <p>连接指定的类。类加载器可以使用此方法来链接类。</p>
@@ -334,7 +334,7 @@ clazz.newInstance();
 </code></pre>
 <hr>
 <h3 id="0x05-自定义类加载器">0x05 自定义类加载器</h3>
-<p>自定义类加载器，只需继承<code>ClassLoader</code>类， 并覆盖掉<code>findClass</code>方法即可。</p>
+<p>自定义类加载器, 只需继承<code>ClassLoader</code>类,  并覆盖掉<code>findClass</code>方法即可。</p>
 <p><strong>自定义文件类加载器</strong></p>
 <details>
 <summary>代码段</summary>
@@ -468,7 +468,7 @@ public class MyUrlClassLoader extends ClassLoader{
         <p><span>本文标题:</span><a  href="/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/">java类加载器</a></p>
         <p><span>文章作者:</span><a  href="/" title="访问 li9hu 的个人博客">li9hu</a></p>
         <p><span>发布时间:</span>2020年04月15日 - 21时52分</p>
-        <p><span>最后更新:</span>2020年04月18日 - 11时29分</p>
+        <p><span>最后更新:</span>2020年04月26日 - 14时58分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/" title="java类加载器">http://yoursite.com/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/　　作者: li9hu" title=""></span>
@@ -566,7 +566,7 @@ public class MyUrlClassLoader extends ClassLoader{
             </a>
         
     </div>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/">java反射</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/">java类加载器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/2020%E9%95%BF%E4%BA%AD%E5%AE%9E%E4%B9%A0/">2020长亭实习</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/">通达OA任意文件上传/文件包含GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">python反序列化</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/PhpMyAdmin%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/">PhpMyAdmin用户界面存在SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/socket%E7%BC%96%E6%88%90/">socket编成</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%B8%A6%E9%A2%9C%E8%89%B2%E8%BE%93%E5%87%BA/">python带颜色输出</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/">http状态码</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/sql%E6%93%8D%E4%BD%9C/">sql操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">入侵检测</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">Thinkphp5x远程代码执行</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/Docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">Docker使用记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/%E7%88%AC%E8%99%AB%E8%AE%B0%E5%BD%95%EF%BC%8C%E7%BC%96%E5%86%99%E4%BB%A3%E7%90%86%E6%B1%A0/">爬虫记录，编写代理池</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/duomi3-0%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96-GetShell/">duomi3.0变量覆盖/GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/">discuzx3.4任意文件删除</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/">discuz 6.*/7.*全局变量防御绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/">关于Phar的总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/%E6%B8%97%E9%80%8F/disable-function%E7%BB%95%E8%BF%87/">disable_function绕过</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/">java反射</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/">java类加载器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/2020%E9%95%BF%E4%BA%AD%E5%AE%9E%E4%B9%A0/">2020长亭实习</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/">通达OA任意文件上传/文件包含GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">python反序列化</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/PhpMyAdmin%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/">PhpMyAdmin用户界面存在SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/socket%E7%BC%96%E6%88%90/">socket编成</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%B8%A6%E9%A2%9C%E8%89%B2%E8%BE%93%E5%87%BA/">python带颜色输出</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/">http状态码</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/sql%E6%93%8D%E4%BD%9C/">sql操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">入侵检测</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">Thinkphp5x远程代码执行</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/Docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">Docker使用记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/%E7%88%AC%E8%99%AB%E8%AE%B0%E5%BD%95%EF%BC%8C%E7%BC%96%E5%86%99%E4%BB%A3%E7%90%86%E6%B1%A0/">爬虫记录, 编写代理池</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/duomi3-0%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96-GetShell/">duomi3.0变量覆盖/GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/">discuzx3.4任意文件删除</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/">discuz 6.*/7.*全局变量防御绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/">关于Phar的总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/%E6%B8%97%E9%80%8F/disable-function%E7%BB%95%E8%BF%87/">disable_function绕过</a></li></ul>
     
 <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
 

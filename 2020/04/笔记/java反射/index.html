@@ -9,15 +9,15 @@
   
   <title>java反射 | li9hu&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x01 java代码在计算机中经历的三个阶段  Source源码阶段 通过javac编译成.class 字节码文件。 Class类对象阶段 通过类加载器(ClassLoader)将字节码加载到内存，并创建Class类对象。 Runtime运行时阶段 通过Class类对象来创建对象。  因为反射机制，将类的各个组成部分封装为其他对象，所以在Class类对象里有成员变量Filed对象，构造方法Con">
+  <meta name="description" content="0x01 java代码在计算机中经历的三个阶段  Source源码阶段 通过javac编译成.class 字节码文件。 Class类对象阶段 通过类加载器(ClassLoader)将字节码加载到内存, 并创建Class类对象。 Runtime运行时阶段 通过Class类对象来创建对象。  因为反射机制, 将类的各个组成部分封装为其他对象, 所以在Class类对象里有成员变量Filed对象, 构造方">
 <meta property="og:type" content="article">
 <meta property="og:title" content="java反射">
 <meta property="og:url" content="http://yoursite.com/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/index.html">
 <meta property="og:site_name" content="li9hu&#39;s Blog">
-<meta property="og:description" content="0x01 java代码在计算机中经历的三个阶段  Source源码阶段 通过javac编译成.class 字节码文件。 Class类对象阶段 通过类加载器(ClassLoader)将字节码加载到内存，并创建Class类对象。 Runtime运行时阶段 通过Class类对象来创建对象。  因为反射机制，将类的各个组成部分封装为其他对象，所以在Class类对象里有成员变量Filed对象，构造方法Con">
+<meta property="og:description" content="0x01 java代码在计算机中经历的三个阶段  Source源码阶段 通过javac编译成.class 字节码文件。 Class类对象阶段 通过类加载器(ClassLoader)将字节码加载到内存, 并创建Class类对象。 Runtime运行时阶段 通过Class类对象来创建对象。  因为反射机制, 将类的各个组成部分封装为其他对象, 所以在Class类对象里有成员变量Filed对象, 构造方">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-04-18T03:30:16.000Z">
-<meta property="article:modified_time" content="2020-04-18T12:20:09.814Z">
+<meta property="article:modified_time" content="2020-04-26T06:58:39.455Z">
 <meta property="article:author" content="li9hu">
 <meta property="article:tag" content="java">
 <meta name="twitter:card" content="summary">
@@ -282,13 +282,13 @@
         <h3 id="0x01-java代码在计算机中经历的三个阶段">0x01 java代码在计算机中经历的三个阶段</h3>
 <ol>
 <li><code>Source源码阶段</code> 通过javac编译成<code>.class</code> 字节码文件。</li>
-<li><code>Class类对象阶段</code> 通过类加载器(ClassLoader)将字节码加载到内存，并创建<code>Class</code>类对象。</li>
+<li><code>Class类对象阶段</code> 通过类加载器(ClassLoader)将字节码加载到内存, 并创建<code>Class</code>类对象。</li>
 <li><code>Runtime运行时阶段</code> 通过<code>Class</code>类对象来创建对象。</li>
 </ol>
-<p>因为反射机制，将类的各个组成部分封装为其他对象，所以在<code>Class</code>类对象里有成员变量Filed对象，构造方法Constructor对象，成员方法Method对象。</p>
+<p>因为反射机制, 将类的各个组成部分封装为其他对象, 所以在<code>Class</code>类对象里有成员变量Filed对象, 构造方法Constructor对象, 成员方法Method对象。</p>
 <h3 id="0x02-获取Class对象的方式">0x02 获取Class对象的方式</h3>
 <ol>
-<li><code>Class.forName(&quot;全类名&quot;)</code> 通过将字节码文件加载进内存，返回Class对象。 字节码还没有加载进内存的情况。多用于配置文件。</li>
+<li><code>Class.forName(&quot;全类名&quot;)</code> 通过将字节码文件加载进内存, 返回Class对象。 字节码还没有加载进内存的情况。多用于配置文件。</li>
 <li><code>类名.class</code> 通过类名的属性class获取, 字节码已经加载到内存了。多用于参数的传递。</li>
 <li><code>对象.getClass()</code>通过对象方法获取,方法在object类中定义的。已经创建了类对象的情况。多用于对象的获取字节码的方式。</li>
 </ol>
@@ -314,7 +314,7 @@ public class Demon1{
 }
 </code></pre>
 </details>
-<p>结论：同一个字节码在一次程序运行过程中，只被加载一份。所以都是同一个Class对象。</p>
+<p>结论：同一个字节码在一次程序运行过程中, 只被加载一份。所以都是同一个Class对象。</p>
 <h3 id="0x03-Class对象功能">0x03 Class对象功能</h3>
 <p><strong>获取功能</strong></p>
 <details>
@@ -402,7 +402,7 @@ public class Demon1{
         //创建对象(newInstance())
         Object p1 = constructor1.newInstance();
         System.out.println(p1);
-        //如果是无参构造方法，Class自带了一个newInstance方法，即可简化
+        //如果是无参构造方法, Class自带了一个newInstance方法, 即可简化
         Object o = t2.newInstance();
         System.out.println(o);
         Constructor constructor2 = t2.getConstructor(int.class);
@@ -472,7 +472,7 @@ public class Demon1{
         <p><span>本文标题:</span><a  href="/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/">java反射</a></p>
         <p><span>文章作者:</span><a  href="/" title="访问 li9hu 的个人博客">li9hu</a></p>
         <p><span>发布时间:</span>2020年04月18日 - 11时30分</p>
-        <p><span>最后更新:</span>2020年04月18日 - 20时20分</p>
+        <p><span>最后更新:</span>2020年04月26日 - 14时58分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/" title="java反射">http://yoursite.com/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/　　作者: li9hu" title=""></span>
@@ -559,7 +559,7 @@ public class Demon1{
             </a>
         
     </div>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/">java反射</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/">java类加载器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/2020%E9%95%BF%E4%BA%AD%E5%AE%9E%E4%B9%A0/">2020长亭实习</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/">通达OA任意文件上传/文件包含GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">python反序列化</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/PhpMyAdmin%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/">PhpMyAdmin用户界面存在SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/socket%E7%BC%96%E6%88%90/">socket编成</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%B8%A6%E9%A2%9C%E8%89%B2%E8%BE%93%E5%87%BA/">python带颜色输出</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/">http状态码</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/sql%E6%93%8D%E4%BD%9C/">sql操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">入侵检测</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">Thinkphp5x远程代码执行</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/Docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">Docker使用记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/%E7%88%AC%E8%99%AB%E8%AE%B0%E5%BD%95%EF%BC%8C%E7%BC%96%E5%86%99%E4%BB%A3%E7%90%86%E6%B1%A0/">爬虫记录，编写代理池</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/duomi3-0%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96-GetShell/">duomi3.0变量覆盖/GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/">discuzx3.4任意文件删除</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/">discuz 6.*/7.*全局变量防御绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/">关于Phar的总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/%E6%B8%97%E9%80%8F/disable-function%E7%BB%95%E8%BF%87/">disable_function绕过</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/">java反射</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/">java类加载器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/2020%E9%95%BF%E4%BA%AD%E5%AE%9E%E4%B9%A0/">2020长亭实习</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/">通达OA任意文件上传/文件包含GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">python反序列化</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/PhpMyAdmin%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/">PhpMyAdmin用户界面存在SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/socket%E7%BC%96%E6%88%90/">socket编成</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%B8%A6%E9%A2%9C%E8%89%B2%E8%BE%93%E5%87%BA/">python带颜色输出</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/">http状态码</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/sql%E6%93%8D%E4%BD%9C/">sql操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">入侵检测</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">Thinkphp5x远程代码执行</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/Docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">Docker使用记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/%E7%88%AC%E8%99%AB%E8%AE%B0%E5%BD%95%EF%BC%8C%E7%BC%96%E5%86%99%E4%BB%A3%E7%90%86%E6%B1%A0/">爬虫记录, 编写代理池</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/duomi3-0%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96-GetShell/">duomi3.0变量覆盖/GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/">discuzx3.4任意文件删除</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/">discuz 6.*/7.*全局变量防御绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/">关于Phar的总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/%E6%B8%97%E9%80%8F/disable-function%E7%BB%95%E8%BF%87/">disable_function绕过</a></li></ul>
     
 <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
 
